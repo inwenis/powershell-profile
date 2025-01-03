@@ -10,7 +10,6 @@ $env:Path += ";c:\programki"
 $env:Path += ";c:\programki\gradle\gradle-8.0\bin\"
 
 $env:DOTNET_ENVIRONMENT  = "Development"
-$env:NODE_EXTRA_CA_CERTS = "./extraCerts.pem"
 
 # InCommodities stuff
 $env:***REMOVED*** = "***REMOVED***"
@@ -127,6 +126,18 @@ function Clean-Git($masterBranch = "master") {
     # $threshold = get-date | % { $_.AddDays(-180)}
 }
 
+function Set-Node-Extra-Ca-Certs-For-DC-Repos() {
+    $dcRepos = @("c:\git\IT.DataCapture", "c:\git\IT.ContinuousDataCapture")
+    $currentDir = Get-Location
+    $areWeInADcRepo = $dcRepos.Where({$_ -eq $currentDir}).Count -gt 0
+    if ($areWeInADcRepo) {
+        $env:NODE_EXTRA_CA_CERTS = "./extraCerts.pem"
+    }
+    else {
+        Remove-Item Env:\NODE_EXTRA_CA_CERTS
+    }
+}
+
 set-alias -name ..     -value cu
 set-alias -name bfg    -value Invoke-Bfg
 set-alias -name curvie -value "IT.Curvie.exe"
@@ -139,3 +150,10 @@ set-alias -name rs     -value Reset-Fiddler
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 oh-my-posh init pwsh | Invoke-Expression
+
+$promptFunction = (Get-Command Prompt).ScriptBlock
+
+function Prompt {
+    Set-Node-Extra-Ca-Certs-For-DC-Repos
+    $promptFunction.Invoke()
+}
