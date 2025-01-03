@@ -8,7 +8,7 @@ $PSDefaultParameterValues['Out-Default:OutVariable'] = '__'
 $env:Path += ";c:\programki"
 $env:Path += ";c:\programki\gradle\gradle-8.0\bin\"
 
-$env:DOTNET_ENVIRONMENT  = "Development"
+$env:DOTNET_ENVIRONMENT = "Development"
 
 # InCommodities stuff
 $env:***REMOVED*** = "***REMOVED***"
@@ -128,7 +128,7 @@ function Clean-Git($masterBranch = "master") {
 function Set-Node-Extra-Ca-Certs-For-DC-Repos() {
     $dcRepos = @("c:\git\IT.DataCapture", "c:\git\IT.ContinuousDataCapture")
     $currentDir = Get-Location
-    $areWeInADcRepo = $dcRepos.Where({$_ -eq $currentDir}).Count -gt 0
+    $areWeInADcRepo = $dcRepos.Where({ $_ -eq $currentDir }).Count -gt 0
     if ($areWeInADcRepo) {
         $env:NODE_EXTRA_CA_CERTS = "./extraCerts.pem"
     }
@@ -152,7 +152,8 @@ function play() {
         $alreadyPlayedVideos = $playFile | ForEach-Object { $_.Split(",")[0] }
         $videoToPlay = $videos | Where-Object { $alreadyPlayedVideos -notcontains $_.Name } | Select-Object -First 1
         save-in-playList-and-play $videoToPlay
-    } else {
+    }
+    else {
         Write-Host "play.txt not found. Playing first video in directory."
         $firstVideo = $videos | Select-Object -First 1
         if ($firstVideo) {
