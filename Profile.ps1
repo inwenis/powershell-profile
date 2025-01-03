@@ -1,6 +1,5 @@
 # https://github.com/dahlbyk/posh-git?tab=readme-ov-file#step-2-import-posh-git-from-your-powershell-profile
 Import-Module posh-git
-Import-Module "$psScriptRoot\play.psm1"
 
 # https://stackoverflow.com/a/52485269/2377787
 # Store previous command's output in $__
@@ -137,6 +136,34 @@ function Set-Node-Extra-Ca-Certs-For-DC-Repos() {
         Remove-Item Env:\NODE_EXTRA_CA_CERTS
     }
 }
+
+function play() {
+    function save-in-playList-and-play($video) {
+        Write-Host "Playing " $video.Name
+        $now = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+        $video.Name + ", " + $now | Out-File play.txt -Append
+        . "C:\Program Files\VideoLAN\VLC\vlc.exe" $video.FullName
+    }
+
+    $file = Get-ChildItem play.txt
+    $videos = Get-ChildItem .\* -include ('*.mp4', '*.mkv') | Sort-Object Name
+    if ($file) {
+        $playFile = $file | Get-Content
+        $alreadyPlayedVideos = $playFile | ForEach-Object { $_.Split(",")[0] }
+        $videoToPlay = $videos | Where-Object { $alreadyPlayedVideos -notcontains $_.Name } | Select-Object -First 1
+        save-in-playList-and-play $videoToPlay
+    } else {
+        Write-Host "play.txt not found. Playing first video in directory."
+        $firstVideo = $videos | Select-Object -First 1
+        if ($firstVideo) {
+            save-in-playList-and-play $firstVideo
+        }
+        else {
+            Write-Host "No videos found."
+        }
+    }
+}
+
 
 set-alias -name ..     -value cu
 set-alias -name bfg    -value Invoke-Bfg
