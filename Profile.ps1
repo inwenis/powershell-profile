@@ -65,10 +65,15 @@ function Open-VsCode {
     }
 }
 
-function Open-TotalCommander($path) {
+function Open-TotalCommander {
     # https://www.ghisler.ch/wiki/index.php/Command_line_parameters
-    $wd = Resolve-Path $path
-    . "C:\Program Files\totalcmd\TOTALCMD64.EXE" $wd /O /T
+    if ($args.Length -eq 0) {
+        $wd = Get-Location
+        . "C:\Program Files\totalcmd\TOTALCMD64.EXE" $wd /O /T
+    }
+    else {
+        . "C:\Program Files\totalcmd\TOTALCMD64.EXE" $args
+    }
 }
 
 function Curves {
