@@ -71,8 +71,12 @@ function Open-TotalCommander {
         $wd = Get-Location
         . "C:\Program Files\totalcmd\TOTALCMD64.EXE" $wd /O /T
     }
+    elseif ($args.Length -eq 1) {
+        $path = Resolve-Path $args[0]
+        . "C:\Program Files\totalcmd\TOTALCMD64.EXE" $path /O /T
+    }
     else {
-        . "C:\Program Files\totalcmd\TOTALCMD64.EXE" $args
+        Write-Host "Too many arguments. Provide a single path to open in Total Commander. Received: '$args'"
     }
 }
 
