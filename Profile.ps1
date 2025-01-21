@@ -5,7 +5,7 @@ Import-Module posh-git
 # Store previous command's output in $__
 $PSDefaultParameterValues['Out-Default:OutVariable'] = '__'
 
-$env:Path += ";c:\programki"
+$env:Path += ";c:\programki\"
 $env:Path += ";c:\programki\gradle\gradle-8.0\bin\"
 
 $env:DOTNET_ENVIRONMENT = "Development"
@@ -97,7 +97,7 @@ function Go-Crazy() {
 }
 
 function Start-Fiddler() {
-    # to make fiddler work with .js I needed to:
+    # to make fiddler work with NODE I needed to:
     # - trust root cert for HTTP
     # - enable TLS1.2 in protocols for HTTPS
     $env:HTTP_PROXY = "http://127.0.0.1:8888"
@@ -116,7 +116,7 @@ function Reset-Fiddler() {
     # to-do remove windows system proxy here (remove = unset/disable)
 }
 
-function Clean-Git($masterBranch = "master") {
+function Clear-Git-Branches($masterBranch = "master") {
     git remote prune origin # remove remote branches that don't exist on origin
     $to_be_removed = git branch --merged $masterBranch --all | Where-Object { ! $_.Contains($masterBranch) }
     $local, $remote = $to_be_removed | Group-Object -Property { $_.Contains("remotes/origin") }
@@ -184,6 +184,7 @@ set-alias -name total  -value Open-TotalCommander
 set-alias -name t      -value Open-TotalCommander
 set-alias -name sf     -value Start-Fiddler
 set-alias -name rs     -value Reset-Fiddler
+set-alias -name cgb    -value Clear-Git-Branches
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 oh-my-posh init pwsh | Invoke-Expression
