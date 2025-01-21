@@ -54,7 +54,7 @@ function ce {
     }
 }
 
-function Invoke-Bfg { java -jar C:\programs\bfg-repo-cleaner\bfg-1.14.0.jar $args }
+function Invoke-Bfg { java -jar C:/programki/bfg-1.15.0.jar $args }
 
 function Open-VsCode {
     if ($args.Length -eq 0) {
@@ -84,7 +84,8 @@ function Curves {
     Get-ChildItem -File -Recurse -include @("*.fs", "*.json", "*.csv", "*.config", "*.py") | Select-String -Pattern "\d{6,}"
 }
 
-function Go-Crazy() {
+function Set-Crazy() {
+    # I think this one doesn't work r/n
     # regex from https://stackoverflow.com/questions/11040707/c-sharp-regex-for-guid
     $found = powercfg /l | sls crazy | % { $_ -match '(?im)[{(]?[0-9A-F]{8}[-]?(?:[0-9A-F]{4}[-]?){3}[0-9A-F]{12}[)}]?' }
     if ($found) {
