@@ -10,11 +10,11 @@ $env:Path += ";c:\programki\gradle\gradle-8.0\bin\"
 
 $env:DOTNET_ENVIRONMENT = "Development"
 
-# InCommodities stuff
-$env:***REMOVED*** = "***REMOVED***"
-
-# finances stuff
-$env:***REMOVED*** = "***REMOVED***"
+# you can put a Secrets.ps1 file next to the profile on your machine to keep your secrets there
+if (Test-Path "$PSScriptRoot/Secrets.ps1") {
+    Write-Host "Loading secrets..."
+    . "$PSScriptRoot/Secrets.ps1"
+}
 
 # cd git
 function cg { Push-Location "c:\git" }
@@ -173,7 +173,6 @@ function play() {
         }
     }
 }
-
 
 set-alias -name ..     -value cu
 set-alias -name bfg    -value Invoke-Bfg
