@@ -118,6 +118,10 @@ function Reset-Fiddler() {
 }
 
 function Clear-Git-Branches($masterBranch = "master") {
+
+}
+
+function Clear-Git-Branches-old($masterBranch = "master") {
     git remote prune origin # remove remote branches that don't exist on origin
     $to_be_removed = git branch --merged $masterBranch --all | Where-Object { ! $_.Contains($masterBranch) }
     $local, $remote = $to_be_removed | Group-Object -Property { $_.Contains("remotes/origin") }
@@ -128,6 +132,9 @@ function Clear-Git-Branches($masterBranch = "master") {
         $trimmed = $branch.Replace("remotes/origin/", "").Trim()
         git push origin --delete $trimmed
     }
+
+    # TODO - sth is off here - it doesn't work for kata repo
+
     # TODO - remove stale branches
     # $a = git branch --all --format="%(authoremail) xxx %(committerdate) xxx %(refname)"
     # $split = $a | % { return ,($_ -split " xxx ") }
