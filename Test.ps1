@@ -134,4 +134,32 @@ Describe 'Clear-Git-Branches' {
 #        popd
 #        Remove-Item "test-git-repo" -Recurse -Force
 #    }
+
+    It 'Removes remote refs gone from remote' {
+        mkdir "test-git-repo-remote"
+        pushd "test-git-repo-remote"
+        git init
+        git commit --allow-empty -m "dummy commit 1"
+        git checkout -b dummy-branch *> $null
+        git commit --allow-empty -m "dummy commit 2"
+        git checkout master *> $null # we need to leave master checked out so that cloning has master checked out by default
+        popd
+
+        git clone test-git-repo-remote "test-git-repo" *> $null
+
+        pushd "test-git-repo-remote"
+        git br -D dummy-branch
+        popd
+
+        pushd "test-git-repo"
+        git pull
+        Clear-Git-Branches
+
+        $all = git branch --all | ForEach-Object { $_.Trim() }
+        $all | Should -Not -Contain "remotes/origin/dummy-branch"
+        popd
+        Remove-Item "test-git-repo" -Recurse -Force
+        Remove-Item "test-git-repo-remote" -Recurse -Force
+    }
+
 }
