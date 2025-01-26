@@ -81,4 +81,32 @@ Describe 'Clear-Git-Branches' {
         Remove-Item "test-git-repo" -Recurse -Force
         Remove-Item "test-git-repo-remote" -Recurse -Force
     }
+
+    It 'Removes multiple remote branch merged into master' {
+        mkdir "test-git-repo-remote"
+        pushd "test-git-repo-remote"
+        git init
+        git commit --allow-empty -m "dummy commit 1"
+        git checkout -b dummy-branch-1 *> $null
+        git commit --allow-empty -m "dummy commit 2"
+        git checkout master *> $null
+        git merge dummy-branch-1 --no-ff --no-edit
+        git checkout -b dummy-branch-2 *> $null
+        git commit --allow-empty -m "dummy commit 3"
+        git checkout master *> $null
+        git merge dummy-branch-2 --no-ff --no-edit
+        popd
+
+        git clone test-git-repo-remote "test-git-repo" *> $null
+        pushd "test-git-repo"
+
+        Clear-Git-Branches
+
+        $all = git branch --all | ForEach-Object { $_.Trim() }
+        $all | Should -Not -Contain "remotes/origin/dummy-branch-1"
+        $all | Should -Not -Contain "remotes/origin/dummy-branch-2"
+        popd
+        Remove-Item "test-git-repo" -Recurse -Force
+        Remove-Item "test-git-repo-remote" -Recurse -Force
+    }
 }
