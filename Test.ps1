@@ -109,4 +109,16 @@ Describe 'Clear-Git-Branches' {
         Remove-Item "test-git-repo" -Recurse -Force
         Remove-Item "test-git-repo-remote" -Recurse -Force
     }
+
+    It 'Does not write errors if there are no branches to remove' {
+        mkdir "test-git-repo"
+        pushd "test-git-repo"
+        git init
+
+        $allOutputs = Clear-Git-Branches | Write-Output
+
+        $allOutputs | ForEach-Object { $_ | Should -Not -BeLike "*fatal*" }
+        popd
+        Remove-Item "test-git-repo" -Recurse -Force
+    }
 }
