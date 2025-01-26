@@ -121,7 +121,6 @@ function Clear-Git-Branches() {
     # TODO - should I intercept all git commands?
     # TODO - should I tee err stream instead of redirecting it to out?
     # TODO - should I do `git fetch` here?
-    # TODO - fatal in tests are still printed
     # TODO - remove stale branches
     # TODO - what if master is main
     # TODO - multiple remotes
