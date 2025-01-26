@@ -35,4 +35,27 @@ Describe 'Clear-Git-Branches' {
         popd
         Remove-Item "test-git-repo" -Recurse -Force
     }
+
+    It 'Removes multiple local branches merged into master' {
+        mkdir "test-git-repo"
+        pushd "test-git-repo"
+        git init
+        git commit --allow-empty -m "dummy commit 1"
+        git checkout -b dummy-branch-1 *> $null
+        git commit --allow-empty -m "dummy commit 2"
+        git checkout master *> $null
+        git merge dummy-branch-1 --no-ff --no-edit
+        git checkout -b dummy-branch-2 *> $null
+        git commit --allow-empty -m "dummy commit 3"
+        git checkout master *> $null
+        git merge dummy-branch-2 --no-ff --no-edit
+
+        Clear-Git-Branches
+
+        $all = git branch --all | ForEach-Object { $_.Trim() }
+        $all | Should -Not -Contain "dummy-branch-1"
+        $all | Should -Not -Contain "dummy-branch-2"
+        popd
+        Remove-Item "test-git-repo" -Recurse -Force
+    }
 }
