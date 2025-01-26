@@ -123,7 +123,7 @@ function Clear-Git-Branches() {
     # TODO - should I do `git fetch` here?
     # TODO - fatal in tests are still printed
     # TODO - remove stale branches
-    # TODO - what is master is main
+    # TODO - what if master is main
     # TODO - multiple remotes
     $allBranches =
         git branch --all --merged "master" `
