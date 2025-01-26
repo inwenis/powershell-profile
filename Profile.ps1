@@ -118,9 +118,12 @@ function Reset-Fiddler() {
 }
 
 function Clear-Git-Branches() {
-    $allBranches = git branch --all --merged "master" | Where-Object { ! ($_ -like "*master*") } | Where-Object { ! ($_ -Contains "HEAD") } | % { $_.Trim() }
-    $localBranchesMergedIntoMaster = $allBranches | Where-Object { ! ($_ -like "*remotes/origin*") }
-    $remoteBranchesMergedIntoMaster = $allBranches | Where-Object { $_ -like "*remotes/origin*" } | % { $_.Replace("remotes/origin/", "") }
+    $allBranches =
+        git branch --all --merged "master" `
+        | Where-Object { ! ($_ -like "*master*") } `
+        | ForEach-Object { $_.Trim() }
+    $localBranchesMergedIntoMaster  = $allBranches | Where-Object { ! ($_ -like "*remotes/origin*") }
+    $remoteBranchesMergedIntoMaster = $allBranches | Where-Object {    $_ -like "*remotes/origin/*" } | ForEach-Object { $_.Replace("remotes/origin/", "") }
     git branch -d $localBranchesMergedIntoMaster
     if ($remoteBranchesMergedIntoMaster.Length -gt 0) {
         git push origin --delete $remoteBranchesMergedIntoMaster
