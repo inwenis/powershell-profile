@@ -4,6 +4,10 @@ Import-Module ./Profile.ps1 -Force
 $rootLocation = Get-Location
 
 BeforeAll {
+    # if somehow the folder is left from previous run, remove it
+    if (Test-Path "executing-tests-here") {
+        Remove-Item "executing-tests-here" -Recurse -Force
+    }
     mkdir "executing-tests-here"
     pushd "executing-tests-here"
 }

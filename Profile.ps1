@@ -117,8 +117,12 @@ function Reset-Fiddler() {
     # to-do remove windows system proxy here (remove = unset/disable)
 }
 
-function Clear-Git-Branches($masterBranch = "master") {
-
+function Clear-Git-Branches() {
+    # git branch outputs branches with leading spaces by default
+    $localBranchesMergedIntoMaster = git branch --merged "master" --format "%(refname:short)" | Where-Object { $_ -ne "master" }
+    foreach ($branch in $localBranchesMergedIntoMaster) {
+        git branch -d $branch
+    }
 }
 
 function Clear-Git-Branches-old($masterBranch = "master") {
