@@ -125,7 +125,10 @@ function Clear-Git-Branches() {
     # TODO - remove stale branches
     # TODO - what if master is main
     # TODO - multiple remotes
-    git remote prune origin
+    $remotes = git remote
+    if ($remotes -Contains "origin") {
+        git remote prune origin *>&1 | Write-Output
+    }
     $allBranches =
         git branch --all --merged "master" `
         | Where-Object { ! ($_ -like "*master*") } `
