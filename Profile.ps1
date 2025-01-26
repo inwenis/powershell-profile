@@ -118,6 +118,8 @@ function Reset-Fiddler() {
 }
 
 function Clear-Git-Branches() {
+    # TODO - should I intercept all git commands?
+    # TODO - should I tee err stream instead of redirecting it to out?
     $allBranches =
         git branch --all --merged "master" `
         | Where-Object { ! ($_ -like "*master*") } `
