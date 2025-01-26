@@ -125,6 +125,7 @@ function Clear-Git-Branches() {
     # TODO - remove stale branches
     # TODO - what if master is main
     # TODO - multiple remotes
+    git remote prune origin
     $allBranches =
         git branch --all --merged "master" `
         | Where-Object { ! ($_ -like "*master*") } `
@@ -136,9 +137,8 @@ function Clear-Git-Branches() {
         git branch -d $localBranchesMergedIntoMaster *>&1 | Write-Output
     }
     if ($remoteBranchesMergedIntoMaster.Length -gt 0) {
-        git push origin --delete $remoteBranchesMergedIntoMaster
+        git push origin --delete $remoteBranchesMergedIntoMaster *>&1 | Write-Output
     }
-    git remote prune origin
 }
 
 function Clear-Git-Branches-old($masterBranch = "master") {
