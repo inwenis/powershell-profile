@@ -118,7 +118,7 @@ function Reset-Fiddler() {
 }
 
 function Clear-Git-Branches() {
-    # git branch outputs branches with leading spaces by default
+    # git branch outputs branches with leading spaces by default hence the --format
     $localBranchesMergedIntoMaster = git branch --merged "master" --format "%(refname:short)" | Where-Object { $_ -ne "master" }
     git branch -d $localBranchesMergedIntoMaster
 }
