@@ -114,6 +114,7 @@ Describe 'Clear-Git-Branches' {
         mkdir "test-git-repo"
         pushd "test-git-repo"
         git init
+        git commit --allow-empty -m "dummy commit 1" # we need a commit so that master branch actually exists
 
         $allOutputs = Clear-Git-Branches | Write-Output
 
@@ -121,4 +122,16 @@ Describe 'Clear-Git-Branches' {
         popd
         Remove-Item "test-git-repo" -Recurse -Force
     }
+
+#    It 'Does not write errors if there are no branches to remove and the repo is completely empty' {
+#        mkdir "test-git-repo"
+#        pushd "test-git-repo"
+#        git init
+#
+#        $allOutputs = Clear-Git-Branches | Write-Output
+#
+#        $allOutputs | ForEach-Object { $_ | Should -Not -BeLike "*fatal*" }
+#        popd
+#        Remove-Item "test-git-repo" -Recurse -Force
+#    }
 }
