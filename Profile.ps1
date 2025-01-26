@@ -123,6 +123,8 @@ function Clear-Git-Branches() {
     # TODO - should I do `git fetch` here?
     # TODO - fatal in tests are still printed
     # TODO - remove stale branches
+    # TODO - what is master is main
+    # TODO - multiple remotes
     $allBranches =
         git branch --all --merged "master" `
         | Where-Object { ! ($_ -like "*master*") } `
@@ -150,8 +152,6 @@ function Clear-Git-Branches-old($masterBranch = "master") {
         $trimmed = $branch.Replace("remotes/origin/", "").Trim()
         git push origin --delete $trimmed
     }
-
-    # TODO - sth is off here - it doesn't work for kata repo
 
     # TODO - remove stale branches
     # $a = git branch --all --format="%(authoremail) xxx %(committerdate) xxx %(refname)"
