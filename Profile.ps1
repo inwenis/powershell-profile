@@ -121,11 +121,6 @@ function Clear-Git-Branches() {
     # only `origin` is currently supported as remote
     # only `master` and `main` are currently supported as head branches
 
-    # TODO - should I intercept all git commands?
-    # TODO - should I tee err stream instead of redirecting it to out?
-    # TODO - should I do `git fetch` here?
-    # TODO - remove stale branches
-
     $remotes = git remote
     if ($remotes -Contains "origin") {
         git remote prune origin *>&1 | Write-Output
@@ -155,11 +150,17 @@ function Clear-Git-Branches() {
     if ($localBranchesMergedIntoMaster.Length -gt 0) {
         # https://stackoverflow.com/a/2916392/2377787 - redirect all outputs
         git branch -d $localBranchesMergedIntoMaster *>&1 | Write-Output
+    } else {
+        Write-Output "No local branches to clean."
     }
     if ($remoteBranchesMergedIntoMaster.Length -gt 0) {
         git push origin --delete $remoteBranchesMergedIntoMaster *>&1 | Write-Output
+    } else {
+        Write-Output "No remote branches to clean."
     }
-    # TODO - remove stale branches
+}
+
+function Clear-Stale-Git-Branches {
     # $a = git branch --all --format="%(authoremail) xxx %(committerdate) xxx %(refname)"
     # $split = $a | % { return ,($_ -split " xxx ") }
     # $x = $split | % { return ,@([datetime]::ParseExact($_[1],"ddd MMM d HH:mm:ss yyyy zzzz",$null),$_[0],$_[1]) }
