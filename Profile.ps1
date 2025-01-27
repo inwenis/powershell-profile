@@ -127,14 +127,22 @@ function Clear-Git-Branches() {
     if ($remotes -Contains "origin") {
         git remote prune origin *>&1 | Write-Output
     }
-    # currently only "master" and "main" are supported as master branches
-    $masterBranch =
-        git br --all --format="%(refname:short)" `
-        | Where-Object { $_ -eq "master" -or $_ -eq "main" } `
-        | Select-Object -First 1
+
+    $headBranch = ""
+    if ($remotes -Contains "origin") {
+        $headBranch =
+            git remote show origin `
+            | Select-String -Pattern "(?:HEAD branch:\s)(.*)" `
+            | ForEach-Object { $_.Matches[0].Groups[1].Value }
+    } else {
+        $headBranch =
+            git branch --all --format="%(refname:short)" `
+            | Where-Object { $_ -eq "master" -or $_ -eq "main" }
+    }
+
     $allBranches =
-        git branch --all --merged $masterBranch `
-        | Where-Object { ! ($_ -like "*$masterBranch*") } `
+        git branch --all --merged $headBranch `
+        | Where-Object { ! ($_ -like "*$headBranch*") } `
         | ForEach-Object { $_.Trim() }
     $localBranchesMergedIntoMaster  = $allBranches | Where-Object { ! ($_ -like "*remotes/origin*") }
     $remoteBranchesMergedIntoMaster = $allBranches | Where-Object {    $_ -like "*remotes/origin/*" } | ForEach-Object { $_.Replace("remotes/origin/", "") }

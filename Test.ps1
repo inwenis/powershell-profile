@@ -209,4 +209,31 @@ Describe 'Clear-Git-Branches' {
         Remove-Item "test-git-repo" -Recurse -Force
     }
 
+    It 'Works with any HEAD branch in origin' {
+        mkdir "test-git-repo-remote"
+        Push-Location "test-git-repo-remote"
+        git init --initial-branch=dummy-head-branch
+        git commit --allow-empty -m "dummy commit 1"
+        Pop-Location
+
+        git clone test-git-repo-remote "test-git-repo" *> $null
+
+        Push-Location "test-git-repo"
+        git checkout -b dummy-branch *> $null
+        git commit --allow-empty -m "dummy commit 2"
+        git checkout dummy-head-branch *> $null
+        git merge dummy-branch --no-ff --no-edit
+
+        $out = Clear-Git-Branches
+
+        $branches = git branch --all | ForEach-Object { $_.Trim() }
+
+        $branches | Should -Not -Contain "dummy-branch"
+        $out | ForEach-Object { $_ | Should -Not -BeLike "*error*" }
+        $out | ForEach-Object { $_ | Should -Not -BeLike "*fatal*" }
+        Pop-Location
+        Remove-Item "test-git-repo" -Recurse -Force
+        Remove-Item "test-git-repo-remote" -Recurse -Force
+    }
+
 }
