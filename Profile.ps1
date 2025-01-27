@@ -123,6 +123,8 @@ function Clear-Git-Branches() {
     # TODO - should I do `git fetch` here?
     # TODO - remove stale branches
     # TODO - multiple remotes
+    # TODO - what if both master and main are present local only? - i think an error should be thrown
+
     $remotes = git remote
     if ($remotes -Contains "origin") {
         git remote prune origin *>&1 | Write-Output
