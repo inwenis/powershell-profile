@@ -118,12 +118,13 @@ function Reset-Fiddler() {
 }
 
 function Clear-Git-Branches() {
+    # only `origin` is currently supported as remote
+    # only `master` and `main` are currently supported as head branches
+
     # TODO - should I intercept all git commands?
     # TODO - should I tee err stream instead of redirecting it to out?
     # TODO - should I do `git fetch` here?
     # TODO - remove stale branches
-    # TODO - multiple remotes
-    # TODO - what if both master and main are present local only? - i think an error should be thrown
 
     $remotes = git remote
     if ($remotes -Contains "origin") {
@@ -140,6 +141,9 @@ function Clear-Git-Branches() {
         $headBranch =
             git branch --all --format="%(refname:short)" `
             | Where-Object { $_ -eq "master" -or $_ -eq "main" }
+        if ($headBranch.Count -eq 2) {
+            throw "Both master and main branches are present locally. Remove one of them."
+        }
     }
 
     $allBranches =

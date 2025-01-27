@@ -236,4 +236,17 @@ Describe 'Clear-Git-Branches' {
         Remove-Item "test-git-repo-remote" -Recurse -Force
     }
 
+    It 'If both master and main are present local only, an error is thrown' {
+        mkdir "test-git-repo"
+        Push-Location "test-git-repo"
+        git init
+        git commit --allow-empty -m "dummy commit 1"
+        git branch main *> $null
+
+        { Clear-Git-Branches } | Should -Throw -ExpectedMessage 'Both master and main branches are present locally. Remove one of them.'
+
+        Pop-Location
+        Remove-Item "test-git-repo" -Recurse -Force
+    }
+
 }
