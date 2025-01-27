@@ -122,15 +122,19 @@ function Clear-Git-Branches() {
     # TODO - should I tee err stream instead of redirecting it to out?
     # TODO - should I do `git fetch` here?
     # TODO - remove stale branches
-    # TODO - what if master is main
     # TODO - multiple remotes
     $remotes = git remote
     if ($remotes -Contains "origin") {
         git remote prune origin *>&1 | Write-Output
     }
+    # currently only "master" and "main" are supported as master branches
+    $masterBranch =
+        git br --all --format="%(refname:short)" `
+        | Where-Object { $_ -eq "master" -or $_ -eq "main" } `
+        | Select-Object -First 1
     $allBranches =
-        git branch --all --merged "master" `
-        | Where-Object { ! ($_ -like "*master*") } `
+        git branch --all --merged $masterBranch `
+        | Where-Object { ! ($_ -like "*$masterBranch*") } `
         | ForEach-Object { $_.Trim() }
     $localBranchesMergedIntoMaster  = $allBranches | Where-Object { ! ($_ -like "*remotes/origin*") }
     $remoteBranchesMergedIntoMaster = $allBranches | Where-Object {    $_ -like "*remotes/origin/*" } | ForEach-Object { $_.Replace("remotes/origin/", "") }

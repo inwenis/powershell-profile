@@ -190,4 +190,23 @@ Describe 'Clear-Git-Branches' {
         Remove-Item "test-git-repo-remote" -Recurse -Force
     }
 
+    It 'Works with main branch instead of master' {
+        mkdir "test-git-repo"
+        Push-Location "test-git-repo"
+        git init --initial-branch=main
+        git commit --allow-empty -m "dummy commit 1" # we need a commit so that master branch doesn't disappear after creating a new branch
+        git checkout -b dummy-branch *> $null # https://stackoverflow.com/questions/57538714/suppress-output-from-git-command-in-powershell
+        git commit --allow-empty -m "dummy commit 2"
+        git checkout main *> $null
+        git merge dummy-branch --no-ff --no-edit # no edit is needed to avoid editor opening
+
+        $out = Clear-Git-Branches
+
+        $branches = git branch --all | ForEach-Object { $_.Trim() }
+        $branches | Should -Not -Contain "dummy-branch"
+        $out | ForEach-Object { $_ | Should -Not -BeLike "*fatal*" }
+        Pop-Location
+        Remove-Item "test-git-repo" -Recurse -Force
+    }
+
 }
