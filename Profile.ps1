@@ -117,15 +117,7 @@ function Reset-Fiddler() {
     # to-do remove windows system proxy here (remove = unset/disable)
 }
 
-function Clear-Git-Branches() {
-    # only `origin` is currently supported as remote
-    # only `master` and `main` are currently supported as head branches
-
-    $remotes = git remote
-    if ($remotes -Contains "origin") {
-        git remote prune origin *>&1 | Write-Output
-    }
-
+function Get-HeadBranch() {
     $headBranch = ""
     if ($remotes -Contains "origin") {
         $headBranch =
@@ -140,6 +132,19 @@ function Clear-Git-Branches() {
             throw "Both master and main branches are present locally. Remove one of them."
         }
     }
+    $headBranch
+}
+
+function Clear-Git-Branches() {
+    # only `origin` is currently supported as remote
+    # only `master` and `main` are currently supported as head branches
+
+    $remotes = git remote
+    if ($remotes -Contains "origin") {
+        git remote prune origin *>&1 | Write-Output
+    }
+
+    $headBranch = Get-HeadBranch
 
     $allBranches =
         git branch --all --merged $headBranch `
@@ -161,10 +166,46 @@ function Clear-Git-Branches() {
 }
 
 function Clear-Stale-Git-Branches {
-    # $a = git branch --all --format="%(authoremail) xxx %(committerdate) xxx %(refname)"
-    # $split = $a | % { return ,($_ -split " xxx ") }
-    # $x = $split | % { return ,@([datetime]::ParseExact($_[1],"ddd MMM d HH:mm:ss yyyy zzzz",$null),$_[0],$_[1]) }
-    # $threshold = get-date | % { $_.AddDays(-180)}
+    $headBranch = Get-HeadBranch
+    $originUrl = git remote get-url origin
+    $now = [dateTimeOffset]::Now
+    $data = git branch --all --format="'%(authorname)' '%(authoremail)' '%(committerdate:iso-strict)' '%(refname)' '%(objectname:short)'"
+    $parsed = $data | ForEach-Object {
+        $groups        = [regex]::match($_,"'(.*)' '<(.*)>' '(.*)' '(.*)' '(.*)'").Groups
+        $author        = $groups[1].Value
+        $email         = $groups[2].Value
+        $date          = [DateTimeOffset]::Parse($groups[3].Value)
+        $branch        = $groups[4].Value.Replace("refs/remotes/origin/", "").Replace("refs/heads/", "")
+        $remoteOrLocal = if ($groups[4].Value -like "refs/remotes/origin/*") { "remote" } else { "local" }
+        $sha1          = $groups[5].Value
+        $age           = $now - $date
+
+        [PSCustomObject]@{
+            Author        = $author
+            Email         = $email
+            Date          = $date
+            Branch        = $branch
+            RemoteOrLocal = $remoteOrLocal
+            Age           = $age
+            SHA1          = $sha1
+        } } `
+        | Where-Object { $_.Branch -ne "$headBranch" } `
+        | Where-Object { $_.Branch -ne "HEAD" } `
+        | Sort-Object Date -Descending
+    $stale = $parsed | Where-Object { $_.Age.TotalDays -gt 100 }
+    $stale | ForEach-Object {
+        $lastCommitDaysAgo = [int] $_.Age.TotalDays
+        $dateFormatted = $_.Date.ToString("yyyy-MM-dd HH:mm")
+        $text = "Last commit by $($_.Author) ($($_.Email)) on $dateFormatted ($lastCommitDaysAgo days ago)"
+        $branchText = "$($_.Branch) ($($_.RemoteOrLocal))"
+        [PSCustomObject]@{
+            Branch = $branchText
+            Text   = $text
+            Last   = "$originUrl/commit/$($_.SHA1)"
+        }
+    }
+    # ask if to remove?
+    # iterate over and delete local and remote branches
 }
 
 function Set-Node-Extra-Ca-Certs-For-DC-Repos() {
