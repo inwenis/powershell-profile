@@ -165,7 +165,7 @@ function Clear-Git-Branches() {
     }
 }
 
-function Clear-Stale-Git-Branches {
+function Clear-Git-Branches-Stale {
     $headBranch = Get-HeadBranch
     $originUrl = git remote get-url origin
     $now = [dateTimeOffset]::Now
@@ -258,7 +258,7 @@ Set-Alias -name t      -value Open-TotalCommander
 Set-Alias -name sf     -value Start-Fiddler
 Set-Alias -name rs     -value Reset-Fiddler
 Set-Alias -name cgb    -value Clear-Git-Branches
-Set-Alias -name csgb   -value Clear-Stale-Git-Branches
+Set-Alias -name cgbs   -value Clear-Git-Branches-Stale
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 oh-my-posh init pwsh | Invoke-Expression
