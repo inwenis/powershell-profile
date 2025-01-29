@@ -248,17 +248,17 @@ function play() {
     }
 }
 
-set-alias -name ..     -value cu
-set-alias -name bfg    -value Invoke-Bfg
-set-alias -name curvie -value "IT.Curvie.exe"
-set-alias -name c      -value Open-VsCode
-set-alias -name cn     -value code # vscode new
-set-alias -name total  -value Open-TotalCommander
-set-alias -name t      -value Open-TotalCommander
-set-alias -name sf     -value Start-Fiddler
-set-alias -name rs     -value Reset-Fiddler
-set-alias -name cgb    -value Clear-Git-Branches
-set-alias -name csgb   -value Clear-Stale-Git-Branches
+Set-Alias -name ..     -value cu
+Set-Alias -name bfg    -value Invoke-Bfg
+Set-Alias -name curvie -value "IT.Curvie.exe"
+Set-Alias -name c      -value Open-VsCode
+Set-Alias -name cn     -value code # vscode new
+Set-Alias -name total  -value Open-TotalCommander
+Set-Alias -name t      -value Open-TotalCommander
+Set-Alias -name sf     -value Start-Fiddler
+Set-Alias -name rs     -value Reset-Fiddler
+Set-Alias -name cgb    -value Clear-Git-Branches
+Set-Alias -name csgb   -value Clear-Stale-Git-Branches
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 oh-my-posh init pwsh | Invoke-Expression
