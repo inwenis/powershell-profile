@@ -203,9 +203,27 @@ function Clear-Git-Branches-Stale {
             Text   = $text
             Last   = "$originUrl/commit/$($_.SHA1)"
         }
+    } | Format-Table -AutoSize
+
+    if ($stale.Length -eq 0) {
+        Write-Output "No stale branches found."
+        return;
     }
-    # ask if to remove?
-    # iterate over and delete local and remote branches
+
+    $answer = Read-Host "type 'yes' to delete all stale branches"
+    if ($answer -eq "yes") {
+        $stale | ForEach-Object {
+            if ($_.RemoteOrLocal -eq "local") {
+                git branch -d $_.Branch
+            }
+            else {
+                git push origin --delete $_.Branch
+            }
+        }
+    }
+    else {
+        Write-Output "No branches deleted."
+    }
 }
 
 function Set-Node-Extra-Ca-Certs-For-DC-Repos() {
