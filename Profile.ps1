@@ -258,6 +258,7 @@ set-alias -name t      -value Open-TotalCommander
 set-alias -name sf     -value Start-Fiddler
 set-alias -name rs     -value Reset-Fiddler
 set-alias -name cgb    -value Clear-Git-Branches
+set-alias -name csgb   -value Clear-Stale-Git-Branches
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 oh-my-posh init pwsh | Invoke-Expression
