@@ -266,17 +266,19 @@ function play() {
     }
 }
 
-Set-Alias -name ..     -value cu
-Set-Alias -name bfg    -value Invoke-Bfg
-Set-Alias -name curvie -value "IT.Curvie.exe"
-Set-Alias -name c      -value Open-VsCode
-Set-Alias -name cn     -value code # vscode new
-Set-Alias -name total  -value Open-TotalCommander
-Set-Alias -name t      -value Open-TotalCommander
-Set-Alias -name sf     -value Start-Fiddler
-Set-Alias -name rs     -value Reset-Fiddler
-Set-Alias -name cgb    -value Clear-Git-Branches
-Set-Alias -name cgbs   -value Clear-Git-Branches-Stale
+# aliases need to be set with scope global so that reloading the profile by simply executing this script
+# also sets aliases for the outer scope (the session that run the current file)
+Set-Alias -scope global -name ..     -value cu
+Set-Alias -scope global -name bfg    -value Invoke-Bfg
+Set-Alias -scope global -name curvie -value "IT.Curvie.exe"
+Set-Alias -scope global -name c      -value Open-VsCode
+Set-Alias -scope global -name cn     -value code # vscode new
+Set-Alias -scope global -name total  -value Open-TotalCommander
+Set-Alias -scope global -name t      -value Open-TotalCommander
+Set-Alias -scope global -name sf     -value Start-Fiddler
+Set-Alias -scope global -name rs     -value Reset-Fiddler
+Set-Alias -scope global -name cgb    -value Clear-Git-Branches
+Set-Alias -scope global -name cgbs   -value Clear-Git-Branches-Stale
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 oh-my-posh init pwsh | Invoke-Expression
