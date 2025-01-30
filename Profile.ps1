@@ -185,6 +185,7 @@ function Clear-Git-Branches-Stale {
             Email         = $email
             Date          = $date
             Branch        = $branch
+            FullRef       = $groups[4].Value
             RemoteOrLocal = $remoteOrLocal
             Age           = $age
             SHA1          = $sha1
@@ -194,14 +195,16 @@ function Clear-Git-Branches-Stale {
         | Sort-Object Date -Descending
     $stale = $parsed | Where-Object { $_.Age.TotalDays -gt 100 }
     $stale | ForEach-Object {
+        $commitCount = git log $headBranch..$($_.FullRef) --oneline | Measure-Object | Select-Object -ExpandProperty Count
         $lastCommitDaysAgo = [int] $_.Age.TotalDays
         $dateFormatted = $_.Date.ToString("yyyy-MM-dd HH:mm")
         $text = "Last commit by $($_.Author) ($($_.Email)) on $dateFormatted ($lastCommitDaysAgo days ago)"
         $branchText = "$($_.Branch) ($($_.RemoteOrLocal))"
         [PSCustomObject]@{
-            Branch = $branchText
-            Text   = $text
-            Last   = "$originUrl/commit/$($_.SHA1)"
+            Branch  = $branchText
+            Text    = $text
+            Last    = "$originUrl/commit/$($_.SHA1)"
+            Commits = $commitCount
         }
     } | Format-Table -AutoSize
 
