@@ -194,7 +194,7 @@ function Clear-Git-Branches-Stale {
         | Where-Object { $_.Branch -ne "HEAD" } `
         | Sort-Object Date -Descending
     $stale = $parsed | Where-Object { $_.Age.TotalDays -gt 100 }
-    $stale | ForEach-Object {
+    $formatted = $stale | ForEach-Object {
         $commitCount = git log $headBranch..$($_.FullRef) --oneline | Measure-Object | Select-Object -ExpandProperty Count
         $lastCommitDaysAgo = [int] $_.Age.TotalDays
         $dateFormatted = $_.Date.ToString("yyyy-MM-dd HH:mm")
@@ -206,26 +206,23 @@ function Clear-Git-Branches-Stale {
             Last    = "$originUrl/commit/$($_.SHA1)"
             Commits = $commitCount
         }
-    } | Format-Table -AutoSize
+    }
 
     if ($stale.Length -eq 0) {
         Write-Output "No stale branches found."
         return;
     }
 
-    $answer = Read-Host "type 'yes' to delete all stale branches"
-    if ($answer -eq "yes") {
-        $stale | ForEach-Object {
-            if ($_.RemoteOrLocal -eq "local") {
-                git branch -d $_.Branch
-            }
-            else {
-                git push origin --delete $_.Branch
-            }
+    $selected = $formatted | Out-ConsoleGridView
+
+    foreach ($branch in $selected) {
+        $branchName = $branch.Branch.Split(" ")[0]
+        $remoteOrLocal = $branch.Branch.Split(" ")[1]
+        if ($remoteOrLocal -eq "(remote)") {
+            git push origin --delete $branchName
+        } else {
+            git branch -D $branchName
         }
-    }
-    else {
-        Write-Output "No branches deleted."
     }
 }
 
