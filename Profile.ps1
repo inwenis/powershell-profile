@@ -266,6 +266,15 @@ function play() {
     }
 }
 
+function playground() {
+    $guid = [Guid]::NewGuid().ToString()
+    $path = Join-Path $env:TEMP $guid
+    New-Item -ItemType Directory -Path $path
+    Push-Location $path
+    New-Item -ItemType File -Name "playground.fsx"
+    code . ./playground.fsx # open the directory in vscode with the file opened
+}
+
 Set-Alias -name ..     -value cu
 Set-Alias -name bfg    -value Invoke-Bfg
 Set-Alias -name curvie -value "IT.Curvie.exe"
@@ -277,6 +286,7 @@ Set-Alias -name sf     -value Start-Fiddler
 Set-Alias -name rs     -value Reset-Fiddler
 Set-Alias -name cgb    -value Clear-Git-Branches
 Set-Alias -name cgbs   -value Clear-Git-Branches-Stale
+Set-Alias -name pg     -value playground
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 oh-my-posh init pwsh | Invoke-Expression
