@@ -5,4 +5,12 @@ if (-not (Test-Path $profileDir)) {
     # The "PowerShell" directory might not exist, but it's the only directory in the path that might be missing
     New-Item -ItemType Directory -Path $profileDir
 }
-Copy-Item -Path "./profile.ps1" -Destination $profileFile
+Write-Host "Deploying profile..."
+# run diff twice to capture the output and preserve colours when writing output to the console
+$diff = git diff --no-index $profileFile "./Profile.ps1"
+git diff --no-index $profileFile "./Profile.ps1"
+if ($null -eq $diff) {
+    Write-Host "No changes to deploy"
+}
+Copy-Item -Path "./Profile.ps1" -Destination $profileFile
+Write-Host "Done"
