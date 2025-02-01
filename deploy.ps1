@@ -14,3 +14,11 @@ if ($null -eq $diff) {
 }
 Copy-Item -Path "./Profile.ps1" -Destination $profileFile
 Write-Host "Done"
+
+New-ModuleManifest .\temp.psd1  -NestedModules "./Profile.ps1"
+
+# Even with adding " -ErrorAction SilentlyContinue | Out-Null" Import module prints an error if deploy.ps1 is run twice
+# However it seems to work as expect
+Import-Module ./temp -Global -Force
+
+Remove-Item .\temp.psd1
