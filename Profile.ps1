@@ -135,7 +135,7 @@ function Get-HeadBranch() {
     $headBranch
 }
 
-function Clear-Git-Branches() {
+function Clear-GitBranches() {
     # only `origin` is currently supported as remote
     # only `master` and `main` are currently supported as head branches
 
@@ -165,7 +165,7 @@ function Clear-Git-Branches() {
     }
 }
 
-function Clear-Git-Branches-Stale {
+function Clear-GitBranchesStale {
     $headBranch = Get-HeadBranch
     $originUrl = git remote get-url origin
     $now = [dateTimeOffset]::Now
@@ -226,7 +226,7 @@ function Clear-Git-Branches-Stale {
     }
 }
 
-function Set-Node-Extra-Ca-Certs-For-DC-Repos() {
+function Set-NodeExtraCaCertsForDCRepos() {
     $dcRepos = @("c:\git\IT.DataCapture", "c:\git\IT.ContinuousDataCapture")
     $currentDir = Get-Location
     $areWeInADcRepo = $dcRepos.Where({ $_ -eq $currentDir }).Count -gt 0
@@ -284,8 +284,8 @@ Set-Alias -name total  -value Open-TotalCommander
 Set-Alias -name t      -value Open-TotalCommander
 Set-Alias -name sf     -value Start-Fiddler
 Set-Alias -name rs     -value Reset-Fiddler
-Set-Alias -name cgb    -value Clear-Git-Branches
-Set-Alias -name cgbs   -value Clear-Git-Branches-Stale
+Set-Alias -name cgb    -value Clear-GitBranches
+Set-Alias -name cgbs   -value Clear-GitBranchesStale
 Set-Alias -name pg     -value playground
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
@@ -294,6 +294,6 @@ oh-my-posh init pwsh | Invoke-Expression
 $promptFunction = (Get-Command Prompt).ScriptBlock
 
 function Prompt {
-    Set-Node-Extra-Ca-Certs-For-DC-Repos
+    Set-NodeExtraCaCertsForDCRepos
     $promptFunction.Invoke()
 }
