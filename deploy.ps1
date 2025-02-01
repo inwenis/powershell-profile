@@ -6,4 +6,3 @@ if (-not (Test-Path $profileDir)) {
     New-Item -ItemType Directory -Path $profileDir
 }
 Copy-Item -Path "./profile.ps1" -Destination $profileFile
-. "./profile.ps1"
