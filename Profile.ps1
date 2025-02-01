@@ -269,9 +269,9 @@ function play() {
 function playground() {
     $guid = [Guid]::NewGuid().ToString()
     $path = Join-Path $env:TEMP $guid
-    New-Item -ItemType Directory -Path $path
+    New-Item -ItemType Directory -Path $path | Out-Null
     Push-Location $path
-    New-Item -ItemType File -Name "playground.fsx"
+    New-Item -ItemType File -Name "playground.fsx" | Out-Null
     code . ./playground.fsx # open the directory in vscode with the file opened
 }
 
