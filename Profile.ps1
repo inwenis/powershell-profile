@@ -272,7 +272,7 @@ function playground() {
     New-Item -ItemType Directory -Path $path | Out-Null
     Push-Location $path
     New-Item -ItemType File -Name "playground.fsx" | Out-Null
-    code . ./playground.fsx # open the directory in vscode with the file opened
+    code . ./playground.fsx --disable-workspace-trust # open the directory in vscode with the playground.fsx opened
 }
 
 function Update-PowerShell() {
