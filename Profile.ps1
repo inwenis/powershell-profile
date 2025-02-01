@@ -275,6 +275,10 @@ function playground() {
     code . ./playground.fsx # open the directory in vscode with the file opened
 }
 
+function Update-PowerShell() {
+    winget install --id Microsoft.PowerShell --source winget
+}
+
 Set-Alias -name ..     -value cu
 Set-Alias -name bfg    -value Invoke-Bfg
 Set-Alias -name curvie -value "IT.Curvie.exe"
