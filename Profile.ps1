@@ -166,6 +166,7 @@ function Clear-GitBranches() {
 }
 
 function Clear-GitBranchesStale {
+    git remote prune origin
     $headBranch = Get-HeadBranch
     $originUrl = git remote get-url origin
     $now = [dateTimeOffset]::Now
