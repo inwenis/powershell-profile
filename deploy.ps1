@@ -14,8 +14,8 @@ if (-not (Test-Path $resourcesDir)) {
 
 Write-Host "Deploying profile..."
 # run diff twice to capture the output and preserve colours when writing output to the console
-$diff = git diff --no-index $profileFile "./Profile.ps1"
-git diff --no-index $profileFile "./Profile.ps1"
+$diff = git --no-pager diff $profileFile "./Profile.ps1"
+git --no-pager diff $profileFile "./Profile.ps1"
 if ($null -eq $diff) {
     Write-Host "No changes to deploy"
 }
@@ -23,8 +23,8 @@ Copy-Item -Path "./Profile.ps1" -Destination $profileFile
 Write-Host "Done"
 
 Write-Host "Deploying resources..."
-$diff = git diff --no-index (Join-Path $resourcesDir $theOnlyResourcesFileSoFar) "./resources/$theOnlyResourcesFileSoFar"
-git diff --no-index (Join-Path $resourcesDir $theOnlyResourcesFileSoFar) "./resources/$theOnlyResourcesFileSoFar"
+$diff = git --no-pager diff (Join-Path $resourcesDir $theOnlyResourcesFileSoFar) "./resources/$theOnlyResourcesFileSoFar"
+git --no-pager diff (Join-Path $resourcesDir $theOnlyResourcesFileSoFar) "./resources/$theOnlyResourcesFileSoFar"
 if ($null -eq $diff) {
     Write-Host "No changes to deploy"
 }
