@@ -165,60 +165,68 @@ function Clear-GitBranches() {
     }
 }
 
-function Clear-GitBranchesStale {
+function Get-GitStaleBranches($daysThreshold = 100) {
+    function Get-GitHubCommitUrl($remoteUrl, $sha1) {
+        "$remoteUrl/commit/$sha1"
+    }
+
     git remote prune origin
+
+    $now = [dateTimeOffset]::Now
+
     $headBranch = Get-HeadBranch
     $originUrl = git remote get-url origin
-    $now = [dateTimeOffset]::Now
-    $data = git branch --all --format="'%(authorname)' '%(authoremail)' '%(committerdate:iso-strict)' '%(refname)' '%(objectname:short)'"
-    $parsed = $data | ForEach-Object {
+
+    $allBranches = git branch --all --format="'%(authorname)' '%(authoremail)' '%(committerdate:iso-strict)' '%(refname)' '%(objectname:short)'"
+    $allBranches `
+    | ForEach-Object {
         $groups        = [regex]::match($_,"'(.*)' '<(.*)>' '(.*)' '(.*)' '(.*)'").Groups
-        $author        = $groups[1].Value
-        $email         = $groups[2].Value
         $date          = [DateTimeOffset]::Parse($groups[3].Value)
         $branch        = $groups[4].Value.Replace("refs/remotes/origin/", "").Replace("refs/heads/", "")
         $remoteOrLocal = if ($groups[4].Value -like "refs/remotes/origin/*") { "remote" } else { "local" }
-        $sha1          = $groups[5].Value
         $age           = $now - $date
 
         [PSCustomObject]@{
-            Author        = $author
-            Email         = $email
+            Author        = $groups[1].Value
+            Email         = $groups[2].Value
             Date          = $date
             Branch        = $branch
             FullRef       = $groups[4].Value
             RemoteOrLocal = $remoteOrLocal
             Age           = $age
-            SHA1          = $sha1
-        } } `
-        | Where-Object { $_.Branch -ne "$headBranch" } `
-        | Where-Object { $_.Branch -ne "HEAD" } `
-        | Sort-Object Date -Descending
-    $stale = $parsed | Where-Object { $_.Age.TotalDays -gt 100 }
-    $formatted = $stale | ForEach-Object {
-        $commitCount = git log $headBranch..$($_.FullRef) --oneline | Measure-Object | Select-Object -ExpandProperty Count
-        $lastCommitDaysAgo = [int] $_.Age.TotalDays
-        $dateFormatted = $_.Date.ToString("yyyy-MM-dd HH:mm")
-        $text = "Last commit by $($_.Author) ($($_.Email)) on $dateFormatted ($lastCommitDaysAgo days ago)"
-        $branchText = "$($_.Branch) ($($_.RemoteOrLocal))"
+            SHA1          = $groups[5].Value
+            Last          = [int] $age.TotalDays
+    } } `
+    | Where-Object { $_.Branch -ne "$headBranch" } ` # exclude master/main
+    | Where-Object { $_.Branch -ne "HEAD" } `        # exclude HEAD refs
+    | Where-Object { $_.Age.TotalDays -gt $daysThreshold } `
+    | Sort-Object Date -Descending `
+    | ForEach-Object {
+        $commitCount                = git log $headBranch..$($_.FullRef) --oneline | Measure-Object | Select-Object -ExpandProperty Count
+        $dateFormatted              = $_.Date.ToString("yyyy-MM-dd HH:mm")
+        $text                       = "Last commit by $($_.Author) ($($_.Email)) on $dateFormatted ($([int] $_.Age.TotalDays) days ago)"
+        $branchNameAndRemoteOrLocal = "$($_.Branch) ($($_.RemoteOrLocal))"
         [PSCustomObject]@{
-            Branch  = $branchText
+            Branch  = $branchNameAndRemoteOrLocal
             Text    = $text
-            Last    = "$originUrl/commit/$($_.SHA1)"
+            Last    = Get-GitHubCommitUrl $originUrl $_.SHA1
             Commits = $commitCount
         }
     }
+}
+
+function Clear-GitBranchesStale($daysThreshold = 100) {
+    $stale = Get-GitStaleBranches $daysThreshold
 
     if ($stale.Length -eq 0) {
         Write-Output "No stale branches found."
         return;
     }
 
-    $selected = $formatted | Out-ConsoleGridView
+    $selected = $stale | Out-ConsoleGridView
 
     foreach ($branch in $selected) {
-        $branchName = $branch.Branch.Split(" ")[0]
-        $remoteOrLocal = $branch.Branch.Split(" ")[1]
+        $branchName, $remoteOrLocal = $branch.Branch.Split(" ")
         if ($remoteOrLocal -eq "(remote)") {
             git push origin --delete $branchName
         } else {
