@@ -282,9 +282,10 @@ function playground() {
     Push-Location $path
     New-Item -ItemType Directory -Name ".vscode" | Out-Null
     New-Item -ItemType File -Name "playground.fsx" | Out-Null
-    # copy settings so that the playground vs code gets a nice orange color thank to peacock
+    # copy settings so that the playground vs code gets a nice orange color thank to peacock extension
     Copy-Item (Join-Path $HOME "Documents" "PowerShell" ".\resources\settings.json") ".vscode\settings.json"
-    code . ./playground.fsx --disable-workspace-trust # open the directory in vscode with the playground.fsx opened
+    # open the directory in vscode with the playground.fsx opened
+    code . ./playground.fsx --disable-workspace-trust
 }
 
 function Update-PowerShell() {
