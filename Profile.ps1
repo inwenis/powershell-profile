@@ -138,6 +138,7 @@ function Get-HeadBranch() {
     $headBranch
 }
 
+# todo - add confirmation here
 function Clear-GitBranches() {
     # only `origin` is currently supported as remote
     # only `master` and `main` are currently supported as head branches
