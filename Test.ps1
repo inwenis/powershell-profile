@@ -17,7 +17,7 @@ AfterAll {
     Remove-Item "executing-tests-here" -Recurse -Force
 }
 
-Describe 'Clear-Git-Branches' {
+Describe 'Clear-GitBranches' {
     It 'Removes a local branch merged into master' {
         mkdir "test-git-repo"
         Push-Location "test-git-repo"
@@ -28,7 +28,7 @@ Describe 'Clear-Git-Branches' {
         git checkout master *> $null
         git merge dummy-branch --no-ff --no-edit # no edit is needed to avoid editor opening
 
-        $out = Clear-Git-Branches
+        $out = Clear-GitBranches
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
         $branches | Should -Not -Contain "dummy-branch"
@@ -51,7 +51,7 @@ Describe 'Clear-Git-Branches' {
         git checkout master *> $null
         git merge dummy-branch-2 --no-ff --no-edit
 
-        Clear-Git-Branches
+        Clear-GitBranches
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
         $branches | Should -Not -Contain "dummy-branch-1"
@@ -74,7 +74,7 @@ Describe 'Clear-Git-Branches' {
         git clone test-git-repo-remote "test-git-repo" *> $null
         Push-Location "test-git-repo"
 
-        Clear-Git-Branches
+        Clear-GitBranches
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
         $branches | Should -Not -Contain "remotes/origin/dummy-branch"
@@ -101,7 +101,7 @@ Describe 'Clear-Git-Branches' {
         git clone test-git-repo-remote "test-git-repo" *> $null
         Push-Location "test-git-repo"
 
-        Clear-Git-Branches
+        Clear-GitBranches
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
         $branches | Should -Not -Contain "remotes/origin/dummy-branch-1"
@@ -117,7 +117,7 @@ Describe 'Clear-Git-Branches' {
         git init
         git commit --allow-empty -m "dummy commit 1" # we need a commit so that master branch actually exists
 
-        $out = Clear-Git-Branches
+        $out = Clear-GitBranches
 
         $out | ForEach-Object { $_ | Should -Not -BeLike "*fatal*" }
         Pop-Location
@@ -129,7 +129,7 @@ Describe 'Clear-Git-Branches' {
 #        Push-Location "test-git-repo"
 #        git init
 #
-#        $out = Clear-Git-Branches
+#        $out = Clear-GitBranches
 #
 #        $out | ForEach-Object { $_ | Should -Not -BeLike "*fatal*" }
 #        Pop-Location
@@ -154,7 +154,7 @@ Describe 'Clear-Git-Branches' {
 
         Push-Location "test-git-repo"
         git pull
-        Clear-Git-Branches
+        Clear-GitBranches
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
         $branches | Should -Not -Contain "remotes/origin/dummy-branch"
@@ -182,7 +182,7 @@ Describe 'Clear-Git-Branches' {
 
         Push-Location "test-git-repo"
 
-        $out = Clear-Git-Branches
+        $out = Clear-GitBranches
 
         $out | ForEach-Object { $_ | Should -Not -BeLike "*error*" }
         Pop-Location
@@ -200,7 +200,7 @@ Describe 'Clear-Git-Branches' {
         git checkout main *> $null
         git merge dummy-branch --no-ff --no-edit # no edit is needed to avoid editor opening
 
-        $out = Clear-Git-Branches
+        $out = Clear-GitBranches
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
         $branches | Should -Not -Contain "dummy-branch"
@@ -224,7 +224,7 @@ Describe 'Clear-Git-Branches' {
         git checkout dummy-head-branch *> $null
         git merge dummy-branch --no-ff --no-edit
 
-        $out = Clear-Git-Branches
+        $out = Clear-GitBranches
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
 
@@ -243,7 +243,7 @@ Describe 'Clear-Git-Branches' {
         git commit --allow-empty -m "dummy commit 1"
         git branch main *> $null
 
-        { Clear-Git-Branches } | Should -Throw -ExpectedMessage 'Both master and main branches are present locally. Remove one of them.'
+        { Clear-GitBranches } | Should -Throw -ExpectedMessage 'Both master and main branches are present locally. Remove one of them.'
 
         Pop-Location
         Remove-Item "test-git-repo" -Recurse -Force
