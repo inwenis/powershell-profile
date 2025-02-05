@@ -217,7 +217,7 @@ function Get-GitStaleBranches($daysThreshold = 100) {
 }
 
 function Clear-GitBranchesStale($daysThreshold = 100) {
-    $stale = Get-GitStaleBranches $daysThreshold
+    $stale = @(Get-GitStaleBranches $daysThreshold)
 
     if ($stale.Length -eq 0) {
         Write-Output "No stale branches found."
