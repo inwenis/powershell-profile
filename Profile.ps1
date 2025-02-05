@@ -123,15 +123,11 @@ function Reset-Fiddler() {
 function Get-HeadBranch() {
     $headBranch = ""
     if ($remotes -Contains "origin") {
-        $headBranch =
-            git remote show origin `
-            | Select-String -Pattern "(?:HEAD branch:\s)(.*)" `
-            | ForEach-Object { $_.Matches[0].Groups[1].Value }
+        $match = @(git remote show origin) | Select-String -Pattern "(?:HEAD branch:\s)(.*)"
+        $headBranch = $match.Matches[0].Groups[1].Value
     } else {
-        $headBranch =
-            git branch --all --format="%(refname:short)" `
-            | Where-Object { $_ -eq "master" -or $_ -eq "main" }
-        if ($headBranch.Count -eq 2) {
+        $headBranch = @(git branch --all --format="%(refname:short)") | Where-Object { $_ -eq "master" -or $_ -eq "main" }
+        if ($headBranch -is [array]) {
             throw "Both master and main branches are present locally. Remove one of them."
         }
     }
@@ -154,8 +150,8 @@ function Clear-GitBranches() {
         git branch --all --merged $headBranch `
         | Where-Object { ! ($_ -like "*$headBranch*") } `
         | ForEach-Object { $_.Trim() }
-    $localBranchesMergedIntoMaster  = $allBranches | Where-Object { ! ($_ -like "*remotes/origin*") }
-    $remoteBranchesMergedIntoMaster = $allBranches | Where-Object {    $_ -like "*remotes/origin/*" } | ForEach-Object { $_.Replace("remotes/origin/", "") }
+    $localBranchesMergedIntoMaster  = @($allBranches | Where-Object { ! ($_ -like "*remotes/origin*") })
+    $remoteBranchesMergedIntoMaster = @($allBranches | Where-Object {    $_ -like "*remotes/origin/*" } | ForEach-Object { $_.Replace("remotes/origin/", "") })
     if ($localBranchesMergedIntoMaster.Length -gt 0) {
         # https://stackoverflow.com/a/2916392/2377787 - redirect all outputs
         git branch -d $localBranchesMergedIntoMaster *>&1 | Write-Output
