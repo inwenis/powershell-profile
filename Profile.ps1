@@ -121,7 +121,8 @@ function Reset-Fiddler() {
 }
 
 function Get-HeadBranch() {
-    $headBranch = ""
+    $private:remotes = git remote
+    $private:headBranch = ""
     if ($remotes -Contains "origin") {
         $match = @(git remote show origin) | Select-String -Pattern "(?:HEAD branch:\s)(.*)"
         $headBranch = $match.Matches[0].Groups[1].Value
@@ -139,7 +140,7 @@ function Clear-GitBranches() {
     # only `origin` is currently supported as remote
     # only `master` and `main` are currently supported as head branches
 
-    $remotes = git remote
+    $private:remotes = git remote
     if ($remotes -Contains "origin") {
         git remote prune origin *>&1 | Write-Output
     }
