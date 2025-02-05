@@ -1,6 +1,9 @@
 # https://github.com/dahlbyk/posh-git?tab=readme-ov-file#step-2-import-posh-git-from-your-powershell-profile
 Import-Module posh-git
 
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/set-strictmode?view=powershell-7.5
+Set-StrictMode -version latest
+
 # https://stackoverflow.com/a/52485269/2377787
 # Store previous command's output in $__
 $PSDefaultParameterValues['Out-Default:OutVariable'] = '__'
