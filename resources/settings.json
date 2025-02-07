@@ -20,4 +20,5 @@
     },
     "peacock.color": "#ff3d00",
     "FSharp.inlayHints.typeAnnotations": false,
+    "FSharp.inlayHints.parameterNames": false,
 }
