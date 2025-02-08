@@ -1,7 +1,6 @@
+Set-StrictMode -version latest
 Import-Module Pester
 Import-Module ./Profile.ps1 -Force
-
-$rootLocation = Get-Location
 
 BeforeAll {
     # if somehow the folder is left from previous run, remove it
@@ -13,7 +12,7 @@ BeforeAll {
 }
 
 AfterAll {
-    Set-Location $rootLocation
+    Pop-Location
     Remove-Item "executing-tests-here" -Recurse -Force
 }
 
