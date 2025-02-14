@@ -277,8 +277,20 @@ function play() {
 }
 
 function playground() {
-    $guid = [Guid]::NewGuid().ToString()
-    $path = Join-Path $env:TEMP $guid
+    if (-not (Test-Path "C:/temp")) {
+        New-Item -ItemType Directory -Path "C:/temp" | Out-Null
+    }
+    $existingDirs = Get-ChildItem "C:/temp"
+    $latestDir = $existingDirs | Sort-Object Name -Descending | Select-Object -First 1
+    $newDir = ""
+    if ($null -eq $latestDir) {
+        $newDir = "playground01"
+    } else {
+        [int] $counter = [Regex]::Match($latestDir.Name, "(\d+)").Groups[1].Value
+        $newDir = "playground" + ($counter + 1).ToString("00")
+    }
+
+    $path = Join-Path "C:/temp" $newDir
     New-Item -ItemType Directory -Path $path | Out-Null
     Push-Location $path
     New-Item -ItemType Directory -Name ".vscode" | Out-Null
