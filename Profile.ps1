@@ -18,14 +18,11 @@ if (Test-Path "$PSScriptRoot/Secrets.ps1") {
     . "$PSScriptRoot/Secrets.ps1"
 }
 
-# cd git
-function cg { Push-Location "c:\git" }
+function Set-LocationGit { Set-Location "c:\git" }
 
-# cd up
-function cu { set-location ".." }
+function Set-LocationUp { Set-Location ".." }
 
-# cd to .exes
-function ce {
+function Set-LocationExe {
     $counter = 0
     [array] $foundExes =
     Get-ChildItem *.exe -Recurse `
@@ -304,7 +301,9 @@ function Update-PowerShell() {
     winget install --id Microsoft.PowerShell --source winget
 }
 
-Set-Alias -name ..     -value cu
+Set-Alias -name ..     -value Set-LocationUp
+Set-Alias -name cg     -value Set-LocationGit
+Set-Alias -name ce     -value Set-LocationExe
 Set-Alias -name bfg    -value Invoke-Bfg
 Set-Alias -name curvie -value "IT.Curvie.exe"
 Set-Alias -name c      -value Open-VsCode
