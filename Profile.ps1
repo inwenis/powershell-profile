@@ -25,7 +25,14 @@ function Set-LocationGit { Set-Location "c:\git" }
 function Set-LocationUp { Set-Location ".." }
 
 function Set-LocationExe {
+    $exe = @( Get-ChildItem -Recurse -File `
+    | Select-Object -First 1 )
 
+    if ($exe.Length -eq 0) {
+        return
+    } else {
+        $exe | Select-Object -First 1 | ForEach-Object { Set-Location $_.DirectoryName }
+    }
 }
 
 function Invoke-Bfg { java -jar C:/programki/bfg-1.15.0.jar $args }

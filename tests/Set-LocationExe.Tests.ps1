@@ -1,6 +1,8 @@
 Set-StrictMode -version latest
 Import-Module Pester
-Import-Module ./Profile.ps1 -Force
+Import-Module $PSScriptRoot/../Profile.ps1 -Force
+
+$wd = Get-Location
 
 BeforeAll {
     # if somehow the folder is left from previous run, remove it
@@ -11,20 +13,36 @@ BeforeAll {
     Push-Location "executing-tests-here"
 }
 
+function Clear-LocationStack {
+    $loc = Get-Location -Stack
+    while ($loc.Count -gt 0) {
+        $loc = Get-Location -Stack
+        Pop-Location
+    }
+}
+
 AfterAll {
-    Pop-Location
+    Clear-LocationStack
+    Set-Location $wd
     Remove-Item "executing-tests-here" -Recurse -Force
 }
 
 Describe 'Set-LocationExe' {
     It 'Does nothing when no exe is found' {
-        mkdir "test-dir"
-        Push-Location "test-dir"
-
         $out = Set-LocationExe
 
         $out | Should -BeNullOrEmpty
-        Pop-Location
+    }
+
+    It 'If a single exe is found, it changes the location' {
+        $wd = Get-Location
+        mkdir "test-dir"
+        New-Item "./test-dir/dummy.exe" -ItemType File
+
+        Set-LocationExe
+
+        Get-Location | Should -BeLike "*test-dir"
+        Set-Location $wd
         Remove-Item "test-dir" -Recurse -Force
     }
 }
