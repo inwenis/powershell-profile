@@ -9,7 +9,6 @@ Set-StrictMode -version latest
 $PSDefaultParameterValues['Out-Default:OutVariable'] = '__'
 
 $env:Path += ";c:\programki\"
-$env:Path += ";c:\programki\gradle\gradle-8.0\bin\"
 
 $env:DOTNET_ENVIRONMENT = "Development"
 
