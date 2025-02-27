@@ -25,34 +25,7 @@ function Set-LocationGit { Set-Location "c:\git" }
 function Set-LocationUp { Set-Location ".." }
 
 function Set-LocationExe {
-    $counter = 0
-    [array] $foundExes =
-    Get-ChildItem *.exe -Recurse `
-    | Where-Object { $_.fullname.contains("bin") } `
-    | Sort-Object LastWriteTime -Descending `
-    | Group-Object DirectoryName `
-    | ForEach-Object {
-        [array] $filenames = $_.Group | ForEach-Object { , $_.Name }
-        $mostRecent = $_.Group | ForEach-Object { $_.LastWriteTime } | Sort-Object -Descending | Select-Object -first 1
-        @{path = $_.Name; files = $filenames; mostrecent = $mostRecent }
-    } `
-    | Sort-Object -Descending -Property mostrecent `
-    | ForEach-Object { $counter = $counter + 1; $_.counter = $counter; , $_ }
-    if ($foundExes.Length -eq 0) {
-        Write-Host "none found"
-    }
-    elseif ($foundExes.Length -eq 1) {
-        $foundExes `
-        | Select-Object -First 1 `
-        | % { $_.path } `
-        | Push-Location
-    }
-    else {
-        $foundExes | ForEach-Object { Write-Host "$($_.counter) $($_.path) $($_.files)" }
-        $choice = Read-Host
-        $gohere = $foundExes | Where-Object { $_.counter -eq $choice } | ForEach-Object { $_.path }
-        Push-Location $gohere
-    }
+
 }
 
 function Invoke-Bfg { java -jar C:/programki/bfg-1.15.0.jar $args }
