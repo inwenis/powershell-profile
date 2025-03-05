@@ -325,8 +325,8 @@ function playground() {
     $path = Join-Path "C:/temp" $newDir
     New-Item -ItemType Directory -Path $path | Out-Null
     Push-Location $path
+    Copy-Item (Join-Path $HOME "Documents" "PowerShell" ".\resources\playground.fsx") "playground.fsx"
     New-Item -ItemType Directory -Name ".vscode" | Out-Null
-    New-Item -ItemType File -Name "playground.fsx" | Out-Null
     # copy settings so that the playground vs code gets a nice orange color thank to peacock extension
     Copy-Item (Join-Path $HOME "Documents" "PowerShell" ".\resources\settings.json") ".vscode\settings.json"
     # open the directory in vscode with the playground.fsx opened
