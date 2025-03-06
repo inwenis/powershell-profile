@@ -9,6 +9,8 @@ Set-StrictMode -version latest
 $PSDefaultParameterValues['Out-Default:OutVariable'] = '__'
 
 $env:Path += ";c:\programki\"
+$env:Path += ";c:\programki\anaconda3\condabin\"
+
 
 $env:DOTNET_ENVIRONMENT = "Development"
 
