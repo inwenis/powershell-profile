@@ -2,7 +2,6 @@
 $profileDir  = "$HOME\Documents\PowerShell"
 $profileFile = "$profileDir\Profile.ps1"
 $resourcesDir = "$profileDir\resources"
-$theOnlyResourcesFileSoFar = "settings.json"
 if (-not (Test-Path $profileDir)) {
     # The "PowerShell" directory might not exist, but it's the only directory in the path that might be missing
     New-Item -ItemType Directory -Path $profileDir | Out-Null
@@ -22,18 +21,24 @@ if ($null -eq $diff) {
 Copy-Item -Path "./Profile.ps1" -Destination $profileFile
 Write-Host "Done"
 
-Write-Host "Deploying resources..."
-$diff = git --no-pager diff (Join-Path $resourcesDir $theOnlyResourcesFileSoFar) "./resources/$theOnlyResourcesFileSoFar"
-git --no-pager diff (Join-Path $resourcesDir $theOnlyResourcesFileSoFar) "./resources/$theOnlyResourcesFileSoFar"
-if ($null -eq $diff) {
-    Write-Host "No changes to deploy"
+function Deploy-File {
+    param (
+        $fullFileName
+    )
+    $diff = git --no-pager diff (Join-Path $resourcesDir $theOnlyResourcesFileSoFar) "./resources/$theOnlyResourcesFileSoFar"
+    git --no-pager diff (Join-Path $resourcesDir $theOnlyResourcesFileSoFar) "./resources/$theOnlyResourcesFileSoFar"
+    if ($null -eq $diff) {
+        Write-Host "No changes to deploy"
+    }
+    Copy-Item -Path "./resources/$theOnlyResourcesFileSoFar" -Destination (Join-Path $resourcesDir $theOnlyResourcesFileSoFar)
+    Write-Host "Done"
 }
-Copy-Item -Path "./resources/$theOnlyResourcesFileSoFar" -Destination (Join-Path $resourcesDir $theOnlyResourcesFileSoFar)
-Write-Host "Done"
+
+Write-Host "Deploying resources..."
+Get-ChildItem -Path "./resources" -File | ForEach-Object { Deploy-File $_ }
 
 # todo - can I use Reload-Profile from Profile.ps1 to reload the profile?
 New-ModuleManifest .\temp.psd1  -NestedModules "./Profile.ps1"
-
 # Even with adding " -ErrorAction SilentlyContinue | Out-Null" Import module prints an error if deploy.ps1 is run twice
 # However it seems to work as expect
 Import-Module ./temp -Global -Force
