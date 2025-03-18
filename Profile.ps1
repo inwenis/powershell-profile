@@ -282,7 +282,7 @@ function play() {
         '*.3g2'
     )
 
-    function save-in-playList-and-play($video) {
+    function Save-In-Playlist-And-Play($video) {
         Write-Host "Playing " $video.Name
         $now = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
         $video.Name + ", " + $now | Out-File play.txt -Append
@@ -290,18 +290,18 @@ function play() {
     }
 
     $file = Get-ChildItem play.txt
-    $videos = Get-ChildItem ./* -include $videoExtensions | Sort-Object Name
+    $videos = Get-ChildItem ./* -Include $videoExtensions | Sort-Object Name
     if ($file) {
         $playFile = $file | Get-Content
         $alreadyPlayedVideos = $playFile | ForEach-Object { $_.Split(",")[0] }
-        $videoToPlay = $videos | Where-Object { $alreadyPlayedVideos -notcontains $_.Name } | Select-Object -First 1
-        save-in-playList-and-play $videoToPlay
+        $videoToPlay = $videos | Where-Object { $alreadyPlayedVideos -NotContains $_.Name } | Select-Object -First 1
+        Save-In-Playlist-And-Play $videoToPlay
     }
     else {
         Write-Host "play.txt not found. Playing first video in directory."
         $firstVideo = $videos | Select-Object -First 1
         if ($firstVideo) {
-            save-in-playList-and-play $firstVideo
+            Save-In-Playlist-And-Play $firstVideo
         }
         else {
             Write-Host "No videos found."
