@@ -285,12 +285,12 @@ function play() {
     function Save-In-Playlist-And-Play($video) {
         Write-Host "Playing " $video.Name
         $now = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-        $video.Name + ", " + $now | Out-File play.txt -Append
+        $video.Name + ", " + $now | Out-File "play.txt" -Append
         . "C:\Program Files\VideoLAN\VLC\vlc.exe" $video.FullName
     }
 
-    $file = Get-ChildItem play.txt
-    $videos = Get-ChildItem ./* -Include $videoExtensions | Sort-Object Name
+    $file = Get-ChildItem "play.txt"
+    $videos = Get-ChildItem "./*" -Include $videoExtensions | Sort-Object Name
     if ($file) {
         $playFile = $file | Get-Content
         $alreadyPlayedVideos = $playFile | ForEach-Object { $_.Split(",")[0] }
