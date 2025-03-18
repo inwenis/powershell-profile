@@ -289,10 +289,9 @@ function play() {
         . "C:\Program Files\VideoLAN\VLC\vlc.exe" $video.FullName
     }
 
-    $file = Get-ChildItem "play.txt"
     $videos = Get-ChildItem "./*" -Include $videoExtensions | Sort-Object Name
-    if ($file) {
-        $playFile = $file | Get-Content
+    if (Test-Path "play.txt") {
+        $playFile = Get-Content -Path "play.txt"
         $alreadyPlayedVideos = $playFile | ForEach-Object { $_.Split(",")[0] }
         $videoToPlay = $videos | Where-Object { $alreadyPlayedVideos -NotContains $_.Name } | Select-Object -First 1
         Save-In-Playlist-And-Play $videoToPlay
