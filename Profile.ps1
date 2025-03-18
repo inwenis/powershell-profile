@@ -296,18 +296,18 @@ function play() {
         $alreadyPlayedVideos = Get-Content -Path "play.txt" | ForEach-Object { $_.Split(",")[0] }
         $videoToPlay = $videos | Where-Object { $alreadyPlayedVideos -NotContains $_.Name } | Select-Object -First 1
         if ($null -eq $videoToPlay) {
-            Write-Host "All videos played. Nothing more to play :("
+            Write-Output "All videos played. Nothing more to play :("
         }
     } elseif ($anyVideos -eq $true -and $playExists -eq $false) {
-        Write-Host "play.txt not found. Playing first video in directory."
+        Write-Output "play.txt not found. Playing first video in directory."
         $videoToPlay = $videos | Select-Object -First 1
     }
     elseif ($anyVideos -eq $false ) {
-        Write-Host "No videos here :("
+        Write-Output "No videos here :("
     }
 
     if ($null -ne $videoToPlay) {
-        Write-Host "Playing " $videoToPlay.Name
+        Write-Output "Playing " $videoToPlay.Name
         Save-ToPlaylist $videoToPlay
         Invoke-Item $videoToPlay.FullName
     }
