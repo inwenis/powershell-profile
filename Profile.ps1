@@ -282,29 +282,27 @@ function play() {
         '*.3g2'
     )
 
-    function Save-In-Playlist-And-Play($video) {
-        Write-Host "Playing " $video.Name
+    function Save-ToPlaylist($video) {
         $now = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
         $video.Name + ", " + $now | Out-File "play.txt" -Append
-        . "C:\Program Files\VideoLAN\VLC\vlc.exe" $video.FullName
     }
 
     $videos = Get-ChildItem "./*" -Include $videoExtensions | Sort-Object Name
+    $videoToPlay = $null
     if (Test-Path "play.txt") {
         $playFile = Get-Content -Path "play.txt"
         $alreadyPlayedVideos = $playFile | ForEach-Object { $_.Split(",")[0] }
         $videoToPlay = $videos | Where-Object { $alreadyPlayedVideos -NotContains $_.Name } | Select-Object -First 1
-        Save-In-Playlist-And-Play $videoToPlay
     }
     else {
         Write-Host "play.txt not found. Playing first video in directory."
-        $firstVideo = $videos | Select-Object -First 1
-        if ($firstVideo) {
-            Save-In-Playlist-And-Play $firstVideo
-        }
-        else {
-            Write-Host "No videos found."
-        }
+        $videoToPlay = $videos | Select-Object -First 1
+    }
+
+    if ($null -ne $videoToPlay) {
+        Write-Host "Playing " $videoToPlay.Name
+        Save-ToPlaylist $videoToPlay
+        Invoke-Item $videoToPlay.FullName
     }
 }
 
