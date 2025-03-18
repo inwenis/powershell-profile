@@ -290,7 +290,7 @@ function play() {
     }
 
     $file = Get-ChildItem play.txt
-    $videos = Get-ChildItem .\* -include $videoExtensions | Sort-Object Name
+    $videos = Get-ChildItem ./* -include $videoExtensions | Sort-Object Name
     if ($file) {
         $playFile = $file | Get-Content
         $alreadyPlayedVideos = $playFile | ForEach-Object { $_.Split(",")[0] }
