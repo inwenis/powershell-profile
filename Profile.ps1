@@ -247,6 +247,41 @@ function Set-NodeExtraCaCertsForDCRepos() {
 }
 
 function play() {
+
+    # list from https://en.wikipedia.org/wiki/Video_file_format
+    $videoExtensions = @(
+        '*.yuv',
+        '*.wmv',
+        '*.webm',
+        '*.vob',
+        '*.viv',
+        '*.svi',
+        '*.roq',
+        '*.rmvb',
+        '*.rm',
+        '*.ogv', '*.ogg',
+        '*.nsv',
+        '*.mxf',
+        '*.MTS', '*.M2TS', '*.TS',
+        '*.mpg', '*.mpeg', '*.m2v',
+        '*.mpg', '*.mp2', '*.mpeg', '*.mpe', '*.mpv',
+        '*.mp4', '*.m4p (with DRM)', '*.m4v',
+        '*.mov', '*.qt',
+        '*.mng',
+        '*.mkv',
+        '*.m4v',
+        '*.gifv',
+        '*.flv *.f4v *.f4p *.f4a *.f4b',
+        '*.flv',
+        '*.flv',
+        '*.drc',
+        '*.avi',
+        '*.asf',
+        '*.amv',
+        '*.3gp',
+        '*.3g2'
+    )
+
     function save-in-playList-and-play($video) {
         Write-Host "Playing " $video.Name
         $now = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
@@ -255,7 +290,7 @@ function play() {
     }
 
     $file = Get-ChildItem play.txt
-    $videos = Get-ChildItem .\* -include ('*.mp4', '*.mkv') | Sort-Object Name
+    $videos = Get-ChildItem .\* -include $videoExtensions | Sort-Object Name
     if ($file) {
         $playFile = $file | Get-Content
         $alreadyPlayedVideos = $playFile | ForEach-Object { $_.Split(",")[0] }
