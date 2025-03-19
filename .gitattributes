@@ -1,0 +1,2 @@
+# use the default setting for everything except .bash_profile
+.bash_profile text eol=lf
