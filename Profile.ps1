@@ -309,7 +309,7 @@ function play() {
     if ($null -ne $videoToPlay) {
         Write-Output "Playing " $videoToPlay.Name
         Save-ToPlaylist $videoToPlay
-        Invoke-Item $videoToPlay.FullName
+        Invoke-Item -LiteralPath $videoToPlay.FullName
     }
 }
 
