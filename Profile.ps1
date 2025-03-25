@@ -352,7 +352,7 @@ Set-Alias -name cn     -value code # vscode new
 Set-Alias -name total  -value Open-TotalCommander
 Set-Alias -name t      -value Open-TotalCommander
 Set-Alias -name sf     -value Start-Fiddler
-Set-Alias -name rs     -value Reset-Fiddler
+Set-Alias -name rf     -value Reset-Fiddler
 Set-Alias -name cgb    -value Clear-GitBranches
 Set-Alias -name cgbs   -value Clear-GitBranchesStale
 Set-Alias -name pg     -value playground
