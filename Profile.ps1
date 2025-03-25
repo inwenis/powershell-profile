@@ -105,7 +105,7 @@ function Start-Fiddler() {
     $env:HTTP_PROXY = "http://127.0.0.1:8888"
     $env:HTTPS_PROXY = "http://127.0.0.1:8888"
     $env:NODE_TLS_REJECT_UNAUTHORIZED = 0
-    Start-Process "C:\programki\fiddlerClassic\Fiddler.exe"
+    Start-Process "c:/Users/fku/AppData/Local/Programs/Fiddler/Fiddler.exe"
     Write-Output "tip - you can filter requests you see in fiddler by using Rules/User-Agents and set it to axios"
     Write-Output "you can also find the Windows proxy settings and disable the proxy that fiddler set. This way you should only see request from your console."
     Write-Output "Remember that intercepting requests will not work for scrapers that use certificates and a custom agent"
