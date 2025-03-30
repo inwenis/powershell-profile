@@ -31,7 +31,7 @@ function Set-LocationExe {
     if ($exe.Length -eq 0) {
         return
     } else {
-        $exe | Select-Object -First 1 | ForEach-Object { Set-Location $_.DirectoryName }
+        $exe | Select-Object -First 1 | ForEach-Object { Push-Location $_.DirectoryName }
     }
 }
 
