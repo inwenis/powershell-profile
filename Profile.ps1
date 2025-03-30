@@ -26,7 +26,6 @@ function Set-LocationUp { Set-Location ".." }
 
 function Set-LocationExe {
     $exe = @( Get-ChildItem -Filter "*.exe" -Recurse -File )
-        # | Select-Object FullName, LastWriteTime )
 
     if ($exe.Length -eq 0) {
         return
