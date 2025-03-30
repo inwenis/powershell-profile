@@ -29,10 +29,16 @@ function Set-LocationExe {
 
     if ($exe.Length -eq 0) {
         return
-    } elseif ($exe.Length -eq 1) {
-        $exe | Select-Object -First 1 | ForEach-Object { Push-Location $_.DirectoryName }
-    } else {
-        $exe | Out-ConsoleGridView -Title "Select exe to open" -OutputMode Single | ForEach-Object { Push-Location $_.DirectoryName }
+    }
+    elseif ($exe.Length -eq 1) {
+        $exe
+        | Select-Object -First 1
+        | ForEach-Object { Push-Location $_.DirectoryName }
+    }
+    else {
+        $exe
+        | Out-ConsoleGridView -Title "Select exe to open" -OutputMode Single
+        | ForEach-Object { Push-Location $_.DirectoryName }
     }
 }
 
