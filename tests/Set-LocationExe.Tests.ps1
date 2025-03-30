@@ -17,7 +17,8 @@ function Clear-LocationStack {
     $loc = Get-Location -Stack
     while ($loc.Count -gt 0) {
         $loc = Get-Location -Stack
-        Pop-Location
+        # tests might leave non-existing locations in the stack so if Pop-Location errors we ignore it
+        Pop-Location -ErrorAction SilentlyContinue
     }
 }
 
@@ -55,6 +56,31 @@ Describe 'Set-LocationExe' {
 
         Get-Location | Should -Not -BeLike "*test-dir"
         Set-Location $wd
+        Remove-Item "test-dir" -Recurse -Force
+    }
+
+    It 'If there are multiple exes goes to the one selected by the user' {
+        $wd = Get-Location
+        mkdir "test-dir"
+        New-Item "./test-dir/dummy.exe" -ItemType File
+        mkdir "test-dir-go-here"
+        New-Item "./test-dir-go-here/dummy.exe" -ItemType File
+
+        Mock -CommandName Out-ConsoleGridView -MockWith {
+            param (
+                 [Parameter(Mandatory)] [PSObject[]] $InputObject
+                ,                       [string]     $Title
+                ,                       [string]     $OutputMode
+            )
+
+            $InputObject[0]
+        }
+
+        Set-LocationExe
+
+        Get-Location | Should -BeLike "*test-dir-go-here"
+        Set-Location $wd
+        Remove-Item "test-dir-go-here" -Recurse -Force
         Remove-Item "test-dir" -Recurse -Force
     }
 }
