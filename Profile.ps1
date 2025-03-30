@@ -25,8 +25,7 @@ function Set-LocationGit { Set-Location "c:\git" }
 function Set-LocationUp { Set-Location ".." }
 
 function Set-LocationExe {
-    $exe = @( Get-ChildItem -Filter "*.exe" -Recurse -File `
-    | Select-Object -First 1 )
+    $exe = @( Get-ChildItem -Filter "*.exe" -Recurse -File )
 
     if ($exe.Length -eq 0) {
         return
