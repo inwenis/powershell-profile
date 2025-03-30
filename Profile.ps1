@@ -25,33 +25,14 @@ function Set-LocationGit { Set-Location "c:\git" }
 function Set-LocationUp { Set-Location ".." }
 
 function Set-LocationExe {
-    $counter = 0
-    [array] $foundExes =
-    Get-ChildItem *.exe -Recurse `
-    | Where-Object { $_.fullname.contains("bin") } `
-    | Sort-Object LastWriteTime -Descending `
-    | Group-Object DirectoryName `
-    | ForEach-Object {
-        [array] $filenames = $_.Group | ForEach-Object { , $_.Name }
-        $mostRecent = $_.Group | ForEach-Object { $_.LastWriteTime } | Sort-Object -Descending | Select-Object -first 1
-        @{path = $_.Name; files = $filenames; mostrecent = $mostRecent }
-    } `
-    | Sort-Object -Descending -Property mostrecent `
-    | ForEach-Object { $counter = $counter + 1; $_.counter = $counter; , $_ }
-    if ($foundExes.Length -eq 0) {
-        Write-Host "none found"
-    }
-    elseif ($foundExes.Length -eq 1) {
-        $foundExes `
-        | Select-Object -First 1 `
-        | % { $_.path } `
-        | Push-Location
-    }
-    else {
-        $foundExes | ForEach-Object { Write-Host "$($_.counter) $($_.path) $($_.files)" }
-        $choice = Read-Host
-        $gohere = $foundExes | Where-Object { $_.counter -eq $choice } | ForEach-Object { $_.path }
-        Push-Location $gohere
+    $exe = @( Get-ChildItem -Filter "*.exe" -Recurse -File )
+
+    if ($exe.Length -eq 0) {
+        return
+    } elseif ($exe.Length -eq 1) {
+        $exe | Select-Object -First 1 | ForEach-Object { Push-Location $_.DirectoryName }
+    } else {
+        $exe | Out-ConsoleGridView -Title "Select exe to open" -OutputMode Single | ForEach-Object { Push-Location $_.DirectoryName }
     }
 }
 
@@ -342,6 +323,12 @@ function Update-PowerShell() {
     winget install --id Microsoft.PowerShell --source winget
 }
 
+function Update-Profile {
+    New-ModuleManifest "./TempModuleToReloadProfile.psd1" -NestedModules "C:/git/powershell-profile/Profile.ps1"
+    Import-Module      "./TempModuleToReloadProfile" -Global -Force
+    Remove-Item        "./TempModuleToReloadProfile.psd1"
+}
+
 Set-Alias -name ..     -value Set-LocationUp
 Set-Alias -name cg     -value Set-LocationGit
 Set-Alias -name ce     -value Set-LocationExe
@@ -356,6 +343,7 @@ Set-Alias -name rf     -value Reset-Fiddler
 Set-Alias -name cgb    -value Clear-GitBranches
 Set-Alias -name cgbs   -value Clear-GitBranchesStale
 Set-Alias -name pg     -value playground
+Set-Alias -name rr     -value Update-Profile
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 oh-my-posh init pwsh | Invoke-Expression

@@ -31,6 +31,7 @@ if ($null -eq $diff) {
 Copy-Item -Path "./resources/$theOnlyResourcesFileSoFar" -Destination (Join-Path $resourcesDir $theOnlyResourcesFileSoFar)
 Write-Host "Done"
 
+# todo - can I use Reload-Profile from Profile.ps1 to reload the profile?
 New-ModuleManifest .\temp.psd1  -NestedModules "./Profile.ps1"
 
 # Even with adding " -ErrorAction SilentlyContinue | Out-Null" Import module prints an error if deploy.ps1 is run twice
