@@ -45,4 +45,16 @@ Describe 'Set-LocationExe' {
         Set-Location $wd
         Remove-Item "test-dir" -Recurse -Force
     }
+
+    It 'Does not change location to non-exe files' {
+        $wd = Get-Location
+        mkdir "test-dir"
+        New-Item "./test-dir/dummy.dum" -ItemType File
+
+        Set-LocationExe
+
+        Get-Location | Should -Not -BeLike "*test-dir"
+        Set-Location $wd
+        Remove-Item "test-dir" -Recurse -Force
+    }
 }
