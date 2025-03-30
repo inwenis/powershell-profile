@@ -133,8 +133,8 @@ function Clear-GitBranches() {
     $headBranch = Get-HeadBranch
 
     $allBranches =
-        git branch --all --merged $headBranch `
-        | Where-Object { ! ($_ -like "*$headBranch*") } `
+        git branch --all --merged $headBranch
+        | Where-Object { ! ($_ -like "*$headBranch*") }
         | ForEach-Object { $_.Trim() }
     $localBranchesMergedIntoMaster  = @($allBranches | Where-Object { ! ($_ -like "*remotes/origin*") })
     $remoteBranchesMergedIntoMaster = @($allBranches | Where-Object {    $_ -like "*remotes/origin/*" } | ForEach-Object { $_.Replace("remotes/origin/", "") })
@@ -164,7 +164,7 @@ function Get-GitStaleBranches($daysThreshold = 100) {
     $originUrl = git remote get-url origin
 
     $allBranches = git branch --all --format="'%(authorname)' '%(authoremail)' '%(committerdate:iso-strict)' '%(refname)' '%(objectname:short)'"
-    $allBranches `
+    $allBranches
     | ForEach-Object {
         $groups        = [regex]::match($_,"'(.*)' '<(.*)>' '(.*)' '(.*)' '(.*)'").Groups
         $date          = [DateTimeOffset]::Parse($groups[3].Value)
@@ -182,11 +182,11 @@ function Get-GitStaleBranches($daysThreshold = 100) {
             Age           = $age
             SHA1          = $groups[5].Value
             Last          = [int] $age.TotalDays
-    } } `
-    | Where-Object { $_.Branch -ne "$headBranch" } ` # exclude master/main
-    | Where-Object { $_.Branch -ne "HEAD" } `        # exclude HEAD refs
-    | Where-Object { $_.Age.TotalDays -gt $daysThreshold } `
-    | Sort-Object Date -Descending `
+    } }
+    | Where-Object { $_.Branch -ne "$headBranch" }   # exclude master/main
+    | Where-Object { $_.Branch -ne "HEAD" }          # exclude HEAD refs
+    | Where-Object { $_.Age.TotalDays -gt $daysThreshold }
+    | Sort-Object Date -Descending
     | ForEach-Object {
         $commitCount                = git log $headBranch..$($_.FullRef) --oneline | Measure-Object | Select-Object -ExpandProperty Count
         $dateFormatted              = $_.Date.ToString("yyyy-MM-dd HH:mm")
