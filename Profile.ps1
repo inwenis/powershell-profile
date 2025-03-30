@@ -324,6 +324,12 @@ function Update-PowerShell() {
     winget install --id Microsoft.PowerShell --source winget
 }
 
+function Update-Profile {
+    New-ModuleManifest "./TempModuleToReloadProfile.psd1" -NestedModules "C:/git/powershell-profile/Profile.ps1"
+    Import-Module      "./TempModuleToReloadProfile" -Global -Force
+    Remove-Item        "./TempModuleToReloadProfile.psd1"
+}
+
 Set-Alias -name ..     -value Set-LocationUp
 Set-Alias -name cg     -value Set-LocationGit
 Set-Alias -name ce     -value Set-LocationExe
@@ -338,6 +344,7 @@ Set-Alias -name rf     -value Reset-Fiddler
 Set-Alias -name cgb    -value Clear-GitBranches
 Set-Alias -name cgbs   -value Clear-GitBranchesStale
 Set-Alias -name pg     -value playground
+Set-Alias -name rr     -value Update-Profile
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 oh-my-posh init pwsh | Invoke-Expression
