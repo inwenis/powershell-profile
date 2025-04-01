@@ -26,9 +26,9 @@ function Set-LocationGit { Set-Location "c:\git" }
 
 function Set-LocationUp { Set-Location ".." }
 
-# todo - order exes by write time and show full path when there are many exes
+# todo - enforce sorting of exes by a test
 function Set-LocationExe {
-    $exe = @( Get-ChildItem -Filter "*.exe" -Recurse -File | Sort-Object LastWriteTime -Descending )
+    $exe = @( Get-ChildItem -Filter "*.exe" -Recurse -File )
     $goto = $null
 
     if ($exe.Length -eq 1) {
