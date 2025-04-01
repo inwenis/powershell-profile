@@ -77,4 +77,21 @@ Describe 'Set-LocationExe' {
         Remove-Item "test-dir-go-here" -Recurse -Force
         Remove-Item "test-dir" -Recurse -Force
     }
+
+    It 'If Esc is pressed in Out-ConsoleGridView, it does not change location' {
+        $wd = Get-Location
+        mkdir "test-dir"
+        New-Item "./test-dir/dummy.exe" -ItemType File
+        mkdir "test-dir-go-here"
+        New-Item "./test-dir-go-here/dummy.exe" -ItemType File
+
+        Mock -CommandName Out-ConsoleGridView -MockWith { }
+
+        Set-LocationExe
+
+        Get-Location | Should -BeLike $wd
+        Set-Location $wd
+        Remove-Item "test-dir-go-here" -Recurse -Force
+        Remove-Item "test-dir" -Recurse -Force
+    }
 }

@@ -37,6 +37,9 @@ function Set-LocationExe {
     }
     else {
         $selected = $exe | Out-ConsoleGridView -Title "Where are we going?" -OutputMode Single
+        if ($null -eq $selected) {
+            return
+        }
         Push-Location $selected.DirectoryName
     }
 }
