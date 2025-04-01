@@ -19,3 +19,9 @@ setup.ps1
 ```
 test.ps1
 ```
+
+# Manual
+
+- `F7` to see the history for the current PowerShell instance
+- `Shift+F7` to see the history for all PowerShell instances
+- `Ctrl+F` in `Out-ConsoleGridView` to type in a filter
