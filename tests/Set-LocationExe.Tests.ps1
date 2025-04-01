@@ -66,15 +66,9 @@ Describe 'Set-LocationExe' {
         mkdir "test-dir-go-here"
         New-Item "./test-dir-go-here/dummy.exe" -ItemType File
 
-        Mock -CommandName Out-ConsoleGridView -MockWith {
-            param (
-                 [Parameter(Mandatory)] [PSObject[]] $InputObject
-                ,                       [string]     $Title
-                ,                       [string]     $OutputMode
-            )
-
-            $InputObject[0]
-        }
+        # pipeline mocking needs to happen like this https://github.com/pester/Pester/issues/2154#issuecomment-2569173571
+        Mock -CommandName Out-ConsoleGridView -MockWith { } -ParameterFilter { $InputObject.DirectoryName -notlike "*test-dir-go-here*" }
+        Mock -CommandName Out-ConsoleGridView -MockWith { Get-Item "./test-dir-go-here/dummy.exe" } -ParameterFilter { $InputObject.DirectoryName -like "*test-dir-go-here*" }
 
         Set-LocationExe
 
