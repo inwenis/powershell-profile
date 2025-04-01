@@ -33,7 +33,8 @@ function Set-LocationExe {
         $goto = $exe[0].DirectoryName
     }
     else {
-        $selected = $exe | Out-ConsoleGridView -Title "Where are we going?" -OutputMode Single
+        # I don't know how to write a test ensuring that DirectoryName is displayed in Out-ConsoleGridView - it is not tested
+        $selected = $exe | Select-Object -Property Mode, LastWriteTime, Length, DirectoryName, Name | Out-ConsoleGridView -Title "Where are we going?" -OutputMode Single
         if ($null -ne $selected) {
             $goto = $selected.DirectoryName
         }
