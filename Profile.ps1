@@ -1,5 +1,7 @@
 # https://github.com/dahlbyk/posh-git?tab=readme-ov-file#step-2-import-posh-git-from-your-powershell-profile
 Import-Module posh-git
+# https://gist.github.com/tig/cbbeab7f53efd73e329afd6d4b838191
+Import-Module -Name "F7History"
 
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/set-strictmode?view=powershell-7.5
 Set-StrictMode -version latest
