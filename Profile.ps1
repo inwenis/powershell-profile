@@ -27,20 +27,20 @@ function Set-LocationUp { Set-Location ".." }
 # todo - order exes by write time and show full path when there are many exes
 function Set-LocationExe {
     $exe = @( Get-ChildItem -Filter "*.exe" -Recurse -File | Sort-Object LastWriteTime -Descending )
+    $goto = $null
 
-
-    if ($exe.Length -eq 0) {
-        return
-    }
-    elseif ($exe.Length -eq 1) {
-        Push-Location $exe[0].DirectoryName
+    if ($exe.Length -eq 1) {
+        $goto = $exe[0].DirectoryName
     }
     else {
         $selected = $exe | Out-ConsoleGridView -Title "Where are we going?" -OutputMode Single
-        if ($null -eq $selected) {
-            return
+        if ($null -ne $selected) {
+            $goto = $selected.DirectoryName
         }
-        Push-Location $selected.DirectoryName
+    }
+
+    if ($null -ne $goto) {
+        Push-Location $goto
     }
 }
 
