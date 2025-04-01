@@ -38,7 +38,7 @@ function Set-LocationExe {
     }
     else {
         $exe
-        | Out-ConsoleGridView -Title "Select exe to open" -OutputMode Single
+        | Out-ConsoleGridView -Title "Where are we going?" -OutputMode Single
         | ForEach-Object { Push-Location $_.DirectoryName }
     }
 }
