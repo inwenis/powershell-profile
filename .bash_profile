@@ -3,6 +3,7 @@ if [ -f ~/.bash_profile_secrets ]; then
 fi
 
 alias cg="pushd /mnt/c/git"
+alias c="code ."
 
 # source bashrc since it's not sourced by default when .bash_profile exists
 if [ -f ~/.bashrc ]; then
