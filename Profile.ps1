@@ -26,7 +26,6 @@ function Set-LocationGit { Set-Location "c:\git" }
 
 function Set-LocationUp { Set-Location ".." }
 
-# todo - enforce sorting of exes by a test
 function Set-LocationExe {
     $exe = @( Get-ChildItem -Filter "*.exe" -Recurse -File )
     $goto = $null
@@ -36,7 +35,11 @@ function Set-LocationExe {
     }
     else {
         # I don't know how to write a test ensuring that DirectoryName is displayed in Out-ConsoleGridView - it is not tested
-        $selected = $exe | Select-Object -Property Mode, LastWriteTime, Length, DirectoryName, Name | Out-ConsoleGridView -Title "Where are we going?" -OutputMode Single
+        $selected =
+            $exe
+            | Select-Object -Property Mode, LastWriteTime, Length, DirectoryName, Name
+            | Sort-Object LastWriteTime -Descending
+            | Out-ConsoleGridView -Title "Where are we going?" -OutputMode Single
         if ($null -ne $selected) {
             $goto = $selected.DirectoryName
         }

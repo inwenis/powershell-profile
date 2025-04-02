@@ -94,4 +94,25 @@ Describe 'Set-LocationExe' {
         Remove-Item "test-dir-go-here" -Recurse -Force
         Remove-Item "test-dir" -Recurse -Force
     }
+
+    It 'Calls Out-ConsoleGridView with items sorted by LastWriteTime' {
+        $wd = Get-Location
+        mkdir "test-dir-1"
+        New-Item "./test-dir-1/a.exe" -ItemType File | Set-ItemProperty -Name LastWriteTime -Value (Get-Date).AddDays(-10)
+        mkdir "test-dir-2"
+        New-Item "./test-dir-2/b.exe" -ItemType File | Set-ItemProperty -Name LastWriteTime -Value (Get-Date)
+
+        $global:arguments = @()
+        Mock -CommandName Out-ConsoleGridView -MockWith {
+            $global:arguments += $InputObject
+        }
+
+        Set-LocationExe
+
+        $global:arguments[0].Name | Should -Be "b.exe"
+        $global:arguments[1].Name | Should -Be "a.exe"
+        Set-Location $wd
+        Remove-Item "test-dir-1" -Recurse -Force
+        Remove-Item "test-dir-2" -Recurse -Force
+    }
 }
