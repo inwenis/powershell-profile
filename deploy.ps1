@@ -47,7 +47,6 @@ if (-not (Test-Path $profileDir)) {
     New-Item -ItemType Directory -Path $profileDir | Out-Null
 }
 if (-not (Test-Path $resourcesDir)) {
-    # The "PowerShell" directory might not exist, but it's the only directory in the path that might be missing
     New-Item -ItemType Directory -Path $resourcesDir | Out-Null
 }
 
