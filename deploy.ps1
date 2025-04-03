@@ -26,6 +26,7 @@ function Deploy-File {
         $fileIncoming = $file.FullName
         $fileDeployed = Join-Path $destinationDir $file.Name
 
+        Write-Host "Deploying $($file.Name)..."
         $diff = Git-Diff $fileDeployed $fileIncoming
         $diff | Write-Host
         if ($null -eq $diff) {
@@ -39,7 +40,6 @@ function Deploy-File {
 
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.4
 $profileDir   = "$HOME\Documents\PowerShell"
-$profileFile  = "$profileDir\Profile.ps1"
 $resourcesDir = "$profileDir\resources"
 
 if (-not (Test-Path $profileDir)) {
@@ -51,19 +51,10 @@ if (-not (Test-Path $resourcesDir)) {
     New-Item -ItemType Directory -Path $resourcesDir | Out-Null
 }
 
-Write-Host "Deploying profile..."
-# run diff twice to capture the output and preserve colours when writing output to the console
-$diff = git --no-pager diff $profileFile "./Profile.ps1"
-git --no-pager diff $profileFile "./Profile.ps1"
-if ($null -eq $diff) {
-    Write-Host "No changes to deploy"
-}
-Copy-Item -Path "./Profile.ps1" -Destination $profileFile
-Write-Host "Done deploying Profile.ps1"
+Get-Item "./Profile.ps1" | Deploy-File -DestinationDir $profileDir
+Get-ChildItem -Path "./resources" -File | Deploy-File -DestinationDir $resourcesDir
 
-Write-Host "Deploying resources..."
-Get-ChildItem -Path "./resources" -File | Deploy-File -destinationDir $resourcesDir
-
+Write-Host "Reloading profile in current session..."
 # todo - can I use Reload-Profile from Profile.ps1 to reload the profile?
 New-ModuleManifest .\temp.psd1  -NestedModules "./Profile.ps1"
 # Even with adding " -ErrorAction SilentlyContinue | Out-Null" Import module prints an error if deploy.ps1 is run twice
