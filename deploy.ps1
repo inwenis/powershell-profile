@@ -22,11 +22,7 @@ if ($null -eq $diff) {
 Copy-Item -Path "./Profile.ps1" -Destination $profileFile
 Write-Host "Done"
 
-# better git add
-# deploy all resource
-# make prelude into a git repo?
 # make deploy file function accept pipe
-
 function Deploy-File {
     param (
         $fullFileName
