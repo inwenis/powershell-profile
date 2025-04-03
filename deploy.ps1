@@ -25,24 +25,30 @@ Write-Host "Done"
 # make deploy file function accept pipe
 function Deploy-File {
     param (
-        $fullFileName
+        [Parameter(ValueFromPipeline)] [System.IO.FileInfo] $file
     )
-    $diff = git --no-pager diff (Join-Path $resourcesDir $theOnlyResourcesFileSoFar) "./resources/$theOnlyResourcesFileSoFar"
-    git --no-pager diff (Join-Path $resourcesDir $theOnlyResourcesFileSoFar) "./resources/$theOnlyResourcesFileSoFar"
-    if ($null -eq $diff) {
-        Write-Host "No changes to deploy"
+
+    process {
+        $fileIncoming = $file.FullName
+        $fileDeployed = Join-Path $resourcesDir $file.Name
+
+        $diff = git --no-pager diff $fileDeployed $fileIncoming
+        git --no-pager diff $fileDeployed $fileIncoming # do it twice to preserve colours
+        if ($null -eq $diff) {
+            Write-Host "No changes to deploy"
+        } else {
+            Copy-Item -Path $fileIncoming -Destination $fileDeployed
+        }
+        Write-Host "Done deploying $($file.Name)"
     }
-    Copy-Item -Path "./resources/$theOnlyResourcesFileSoFar" -Destination (Join-Path $resourcesDir $theOnlyResourcesFileSoFar)
-    Write-Host "Done"
 }
 
 Write-Host "Deploying resources..."
-Get-ChildItem -Path "./resources" -File | ForEach-Object { Deploy-File $_ }
+Get-ChildItem -Path "./resources" -File | Deploy-File
 
 # todo - can I use Reload-Profile from Profile.ps1 to reload the profile?
 New-ModuleManifest .\temp.psd1  -NestedModules "./Profile.ps1"
 # Even with adding " -ErrorAction SilentlyContinue | Out-Null" Import module prints an error if deploy.ps1 is run twice
 # However it seems to work as expect
 Import-Module ./temp -Global -Force
-
 Remove-Item .\temp.psd1
