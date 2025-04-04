@@ -52,14 +52,7 @@ function Set-LocationExe {
 
 function Invoke-Bfg { java -jar C:/programki/bfg-1.15.0.jar $args }
 
-function Open-VsCode {
-    if ($args.Length -eq 0) {
-        code .
-    }
-    else {
-        code $args
-    }
-}
+function Open-VsCodeDot { code . }
 
 function Open-TotalCommander {
     # https://www.ghisler.ch/wiki/index.php/Command_line_parameters
@@ -331,8 +324,8 @@ Set-Alias -name cg     -value Set-LocationGit
 Set-Alias -name ce     -value Set-LocationExe
 Set-Alias -name bfg    -value Invoke-Bfg
 Set-Alias -name curvie -value "IT.Curvie.exe"
-Set-Alias -name c      -value Open-VsCode
-Set-Alias -name cn     -value code # vscode new
+Set-Alias -name c      -value Open-VsCodeDot
+Set-Alias -name cn     -value code
 Set-Alias -name total  -value Open-TotalCommander
 Set-Alias -name t      -value Open-TotalCommander
 Set-Alias -name sf     -value Start-Fiddler
