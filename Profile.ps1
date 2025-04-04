@@ -76,23 +76,6 @@ function Open-TotalCommander {
     }
 }
 
-function Curves {
-    Get-ChildItem -File -Recurse -include @("*.fs", "*.json", "*.csv", "*.config", "*.py") | Select-String -Pattern "\d{6,}"
-}
-
-function Set-Crazy() {
-    # I think this one doesn't work r/n
-    # regex from https://stackoverflow.com/questions/11040707/c-sharp-regex-for-guid
-    $found = powercfg /l | Select-String crazy | ForEach-Object { $_ -match '(?im)[{(]?[0-9A-F]{8}[-]?(?:[0-9A-F]{4}[-]?){3}[0-9A-F]{12}[)}]?' }
-    if ($found) {
-        powercfg /SETACTIVE $matches[0]
-        Write-Output "going crazy!!!!"
-    }
-    else {
-        Write-Output "oh no - crazy profile not found!"
-    }
-}
-
 function Start-Fiddler() {
     # to make fiddler work with NODE I needed to:
     # - trust root cert for HTTP
