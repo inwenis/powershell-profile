@@ -1,4 +1,4 @@
-#load "C:/git/prelude/prelude.fsx"
+#load "c:/git/prelude/prelude.fsx"
 
 open System
 
