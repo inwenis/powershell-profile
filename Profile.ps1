@@ -111,8 +111,8 @@ function Clear-GitRepo() {
 
     $private:remotes = git remote
     if ($remotes -Contains "origin") {
-        # this prunes branches and tags
-        git fetch --prune --prune-tags *>&1 | Write-Output
+        git fetch --prune origin "refs/tags/*:refs/tags/*"
+        git fetch --prune origin "refs/remotes/*:refs/remotes/*"
     }
 
     $headBranch = Get-HeadBranch
