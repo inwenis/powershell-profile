@@ -105,7 +105,7 @@ function Get-HeadBranch() {
 }
 
 # todo - add confirmation here
-function Clear-GitBranches() {
+function Clear-GitRepo() {
     # only `origin` is currently supported as remote
     # only `master` and `main` are currently supported as head branches
 
@@ -331,7 +331,7 @@ Set-Alias -name total  -value Open-TotalCommander
 Set-Alias -name t      -value Open-TotalCommander
 Set-Alias -name sf     -value Start-Fiddler
 Set-Alias -name rf     -value Reset-Fiddler
-Set-Alias -name cgb    -value Clear-GitBranches
+Set-Alias -name cgr    -value Clear-GitRepo
 Set-Alias -name cgbs   -value Clear-GitBranchesStale
 Set-Alias -name pg     -value playground
 Set-Alias -name rr     -value Update-Profile

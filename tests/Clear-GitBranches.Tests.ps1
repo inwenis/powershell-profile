@@ -16,7 +16,7 @@ AfterAll {
     Remove-Item "executing-tests-here" -Recurse -Force
 }
 
-Describe 'Clear-GitBranches' {
+Describe 'Clear-GitRepo' {
     It 'Removes a local branch merged into master' {
         mkdir "test-git-repo"
         Push-Location "test-git-repo"
@@ -27,7 +27,7 @@ Describe 'Clear-GitBranches' {
         git checkout master *> $null
         git merge dummy-branch --no-ff --no-edit # no edit is needed to avoid editor opening
 
-        $out = Clear-GitBranches
+        $out = Clear-GitRepo
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
         $branches | Should -Not -Contain "dummy-branch"
@@ -50,7 +50,7 @@ Describe 'Clear-GitBranches' {
         git checkout master *> $null
         git merge dummy-branch-2 --no-ff --no-edit
 
-        Clear-GitBranches
+        Clear-GitRepo
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
         $branches | Should -Not -Contain "dummy-branch-1"
@@ -73,7 +73,7 @@ Describe 'Clear-GitBranches' {
         git clone test-git-repo-remote "test-git-repo" *> $null
         Push-Location "test-git-repo"
 
-        Clear-GitBranches
+        Clear-GitRepo
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
         $branches | Should -Not -Contain "remotes/origin/dummy-branch"
@@ -100,7 +100,7 @@ Describe 'Clear-GitBranches' {
         git clone test-git-repo-remote "test-git-repo" *> $null
         Push-Location "test-git-repo"
 
-        Clear-GitBranches
+        Clear-GitRepo
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
         $branches | Should -Not -Contain "remotes/origin/dummy-branch-1"
@@ -116,7 +116,7 @@ Describe 'Clear-GitBranches' {
         git init
         git commit --allow-empty -m "dummy commit 1" # we need a commit so that master branch actually exists
 
-        $out = Clear-GitBranches
+        $out = Clear-GitRepo
 
         $out | ForEach-Object { $_ | Should -Not -BeLike "*fatal*" }
         Pop-Location
@@ -128,7 +128,7 @@ Describe 'Clear-GitBranches' {
 #        Push-Location "test-git-repo"
 #        git init
 #
-#        $out = Clear-GitBranches
+#        $out = Clear-GitRepo
 #
 #        $out | ForEach-Object { $_ | Should -Not -BeLike "*fatal*" }
 #        Pop-Location
@@ -153,7 +153,7 @@ Describe 'Clear-GitBranches' {
 
         Push-Location "test-git-repo"
         git pull
-        Clear-GitBranches
+        Clear-GitRepo
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
         $branches | Should -Not -Contain "remotes/origin/dummy-branch"
@@ -181,7 +181,7 @@ Describe 'Clear-GitBranches' {
 
         Push-Location "test-git-repo"
 
-        $out = Clear-GitBranches
+        $out = Clear-GitRepo
 
         $out | ForEach-Object { $_ | Should -Not -BeLike "*error*" }
         Pop-Location
@@ -199,7 +199,7 @@ Describe 'Clear-GitBranches' {
         git checkout main *> $null
         git merge dummy-branch --no-ff --no-edit # no edit is needed to avoid editor opening
 
-        $out = Clear-GitBranches
+        $out = Clear-GitRepo
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
         $branches | Should -Not -Contain "dummy-branch"
@@ -223,7 +223,7 @@ Describe 'Clear-GitBranches' {
         git checkout dummy-head-branch *> $null
         git merge dummy-branch --no-ff --no-edit
 
-        $out = Clear-GitBranches
+        $out = Clear-GitRepo
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
 
@@ -242,7 +242,7 @@ Describe 'Clear-GitBranches' {
         git commit --allow-empty -m "dummy commit 1"
         git branch main *> $null
 
-        { Clear-GitBranches } | Should -Throw -ExpectedMessage 'Both master and main branches are present locally. Remove one of them.'
+        { Clear-GitRepo } | Should -Throw -ExpectedMessage 'Both master and main branches are present locally. Remove one of them.'
 
         Pop-Location
         Remove-Item "test-git-repo" -Recurse -Force
@@ -263,7 +263,7 @@ Describe 'Clear-GitBranches' {
         Pop-Location
 
         Push-Location "test-git-repo"
-        Clear-GitBranches
+        Clear-GitRepo
 
         $tags = git tag
 
