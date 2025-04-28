@@ -248,4 +248,29 @@ Describe 'Clear-GitBranches' {
         Remove-Item "test-git-repo" -Recurse -Force
     }
 
+    It 'Removes tags removed from remote' {
+        mkdir "test-git-repo-remote"
+        Push-Location "test-git-repo-remote"
+        git init
+        git commit --allow-empty -m "dummy commit 1"
+        git tag dummy-tag-1
+        Pop-Location
+
+        git clone "test-git-repo-remote" "test-git-repo" *> $null
+
+        Push-Location "test-git-repo-remote"
+        git tag -d dummy-tag-1
+        Pop-Location
+
+        Push-Location "test-git-repo"
+        Clear-GitBranches
+
+        $tags = git tag
+
+        $tags | Should -Not -Contain "dummy-tag-1"
+        Pop-Location
+        Remove-Item "test-git-repo" -Recurse -Force
+        Remove-Item "test-git-repo-remote" -Recurse -Force
+    }
+
 }

@@ -111,7 +111,8 @@ function Clear-GitBranches() {
 
     $private:remotes = git remote
     if ($remotes -Contains "origin") {
-        git remote prune origin *>&1 | Write-Output
+        # this prunes branches and tags
+        git fetch --prune --prune-tags *>&1 | Write-Output
     }
 
     $headBranch = Get-HeadBranch
