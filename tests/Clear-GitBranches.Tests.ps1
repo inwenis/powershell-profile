@@ -59,7 +59,7 @@ Describe 'Clear-GitRepo' {
         Remove-Item "test-git-repo" -Recurse -Force
     }
 
-    It 'Removes remote branch merged into master' {
+    It 'Removes remote branch merged into master and keeps ref to remote master' {
         mkdir "test-git-repo-remote"
         Push-Location "test-git-repo-remote"
         git init
@@ -77,6 +77,7 @@ Describe 'Clear-GitRepo' {
 
         $branches = git branch --all | ForEach-Object { $_.Trim() }
         $branches | Should -Not -Contain "remotes/origin/dummy-branch"
+        $branches | Should -Contain "remotes/origin/master"
         Pop-Location
         Remove-Item "test-git-repo" -Recurse -Force
         Remove-Item "test-git-repo-remote" -Recurse -Force
