@@ -104,7 +104,8 @@ function Get-HeadBranch() {
     $headBranch
 }
 
-# todo - add confirmation here
+# todo - maybe add confirmation before actually deleting stuff
+# this function will also delete local tags that are not present on the remote
 function Clear-GitRepo() {
     # only `origin` is currently supported as remote
     # only `master` and `main` are currently supported as head branches
