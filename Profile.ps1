@@ -125,7 +125,6 @@ function Clear-GitRepo() {
     $localBranchesMergedIntoMaster  = @($allBranches | Where-Object { ! ($_ -like "*remotes/origin*") })
     $remoteBranchesMergedIntoMaster = @($allBranches | Where-Object {    $_ -like "*remotes/origin/*" } | ForEach-Object { $_.Replace("remotes/origin/", "") })
     if ($localBranchesMergedIntoMaster.Length -gt 0) {
-        # https://stackoverflow.com/a/2916392/2377787 - redirect all outputs
         git branch -d $localBranchesMergedIntoMaster *>&1 | Write-Output
     } else {
         Write-Output "No local branches to clean."
