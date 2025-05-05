@@ -319,6 +319,18 @@ function Update-Profile {
     Remove-Item        "./TempModuleToReloadProfile.psd1"
 }
 
+function Import-Conda {
+# conda added the below region to my "C:\Users\...\Documents\WindowsPowerShell\profile.ps1"
+# I use PowerShell 7 (not Windows PowerShell) so I'll add it here to hopefully be able to work with conda in PowerShell 7
+
+#region conda initialize
+# !! Contents within this block are managed by 'conda init' !!
+If (Test-Path "C:\programki\anaconda3\Scripts\conda.exe") {
+    (& "C:\programki\anaconda3\Scripts\conda.exe" "shell.powershell" "hook") | Out-String | ?{$_} | Invoke-Expression
+}
+#endregion
+}
+
 Set-Alias -name ..     -value Set-LocationUp
 Set-Alias -name cg     -value Set-LocationGit
 Set-Alias -name ce     -value Set-LocationExe
@@ -334,6 +346,7 @@ Set-Alias -name cgr    -value Clear-GitRepo
 Set-Alias -name cgbs   -value Clear-GitBranchesStale
 Set-Alias -name pg     -value playground
 Set-Alias -name rr     -value Update-Profile
+Set-Alias -name ic     -value Import-Conda
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 oh-my-posh init pwsh | Invoke-Expression
@@ -344,3 +357,6 @@ function Prompt {
     Set-NodeExtraCaCertsForDCRepos
     $promptFunction.Invoke()
 }
+
+
+
