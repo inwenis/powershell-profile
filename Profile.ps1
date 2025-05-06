@@ -331,6 +331,10 @@ If (Test-Path "C:\programki\anaconda3\Scripts\conda.exe") {
 #endregion
 }
 
+function Invoke-Login {
+    . "C:\git\snips\ahk\logins.ahk"
+}
+
 Set-Alias -name ..     -value Set-LocationUp
 Set-Alias -name cg     -value Set-LocationGit
 Set-Alias -name ce     -value Set-LocationExe
@@ -347,6 +351,7 @@ Set-Alias -name cgbs   -value Clear-GitBranchesStale
 Set-Alias -name pg     -value playground
 Set-Alias -name rr     -value Update-Profile
 Set-Alias -name ic     -value Import-Conda
+Set-Alias -name l      -value Invoke-Login
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 oh-my-posh init pwsh | Invoke-Expression
