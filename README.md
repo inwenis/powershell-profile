@@ -27,4 +27,4 @@ test.ps1
 - `Ctrl+F` in `Out-ConsoleGridView` to type in a filter
 
 # todo
-on one of my machines the profile points to onedrive - fix deploy.ps1 so it deploys to onedrive
+after importing conda the time at end of prompt is pushed to new line
