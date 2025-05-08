@@ -320,15 +320,12 @@ function Update-Profile {
 }
 
 function Import-Conda {
-# conda added the below region to my "C:\Users\...\Documents\WindowsPowerShell\profile.ps1"
-# I use PowerShell 7 (not Windows PowerShell) so I'll add it here to hopefully be able to work with conda in PowerShell 7
-
-#region conda initialize
-# !! Contents within this block are managed by 'conda init' !!
-If (Test-Path "C:\programki\anaconda3\Scripts\conda.exe") {
-    (& "C:\programki\anaconda3\Scripts\conda.exe" "shell.powershell" "hook") | Out-String | ?{$_} | Invoke-Expression
-}
-#endregion
+    if (Test-Path "C:\programki\anaconda3\Scripts\conda.exe") {
+        (& "C:\programki\anaconda3\Scripts\conda.exe" "shell.powershell" "hook") | Out-String | ?{$_} | Invoke-Expression
+    }
+    if (Test-Path "c:\Users\fku\AppData\Local\miniconda3\Scripts\conda.exe") {
+        (& "c:\Users\fku\AppData\Local\miniconda3\Scripts\conda.exe" "shell.powershell" "hook") | Out-String | ?{$_} | Invoke-Expression
+    }
 }
 
 function Invoke-Login {
