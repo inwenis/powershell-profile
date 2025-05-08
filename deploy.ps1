@@ -39,7 +39,7 @@ function Deploy-File {
 }
 
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.4
-$profileDir   = "$HOME\Documents\PowerShell"
+$profileDir   = $PROFILE | Split-Path -Parent
 $resourcesDir = "$profileDir\resources"
 
 if (-not (Test-Path $profileDir)) {
