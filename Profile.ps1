@@ -362,6 +362,3 @@ function Prompt {
     Set-NodeExtraCaCertsForDCRepos
     $promptFunction.Invoke()
 }
-
-
-
