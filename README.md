@@ -25,3 +25,6 @@ test.ps1
 - `F7` to see the history for the current PowerShell instance
 - `Shift+F7` to see the history for all PowerShell instances
 - `Ctrl+F` in `Out-ConsoleGridView` to type in a filter
+
+# todo
+on one of my machines the profile points to onedrive - fix deploy.ps1 so it deploys to onedrive
