@@ -11,8 +11,6 @@ Set-StrictMode -version latest
 $PSDefaultParameterValues['Out-Default:OutVariable'] = '__'
 
 $env:Path += ";c:\programki\"
-$env:Path += ";c:\programki\anaconda3\condabin\"
-
 
 $env:DOTNET_ENVIRONMENT = "Development"
 
@@ -320,11 +318,10 @@ function Update-Profile {
 }
 
 function Import-Conda {
-    if (Test-Path "C:\programki\anaconda3\Scripts\conda.exe") {
-        (& "C:\programki\anaconda3\Scripts\conda.exe" "shell.powershell" "hook") | Out-String | ?{$_} | Invoke-Expression
-    }
-    if (Test-Path "c:\Users\fku\AppData\Local\miniconda3\Scripts\conda.exe") {
-        (& "c:\Users\fku\AppData\Local\miniconda3\Scripts\conda.exe" "shell.powershell" "hook") | Out-String | ?{$_} | Invoke-Expression
+    if (Test-Path "c:/Users/fku/AppData/Local/anaconda3/Scripts/conda.exe") {
+        (& "c:/Users/fku/AppData/Local/anaconda3/Scripts/conda.exe" "shell.powershell" "hook") | Out-String | ?{$_} | Invoke-Expression
+    } else {
+        Write-Output "Conda not found. Please run `winget install -e --id Anaconda.Anaconda3` to install conda."
     }
 }
 
