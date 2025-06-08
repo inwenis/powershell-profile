@@ -120,7 +120,7 @@ function Clear-GitRepo() {
         | Where-Object { ! ($_ -like "*$headBranch*") }
         | ForEach-Object { $_.Trim() }
     $localBranchesMergedIntoMaster  = @($allBranches | Where-Object { ! ($_ -like "*remotes/origin*") })
-    $remoteBranchesMergedIntoMaster = @($allBranches | Where-Object {    $_ -like "*remotes/origin/*" } | ForEach-Object { $_.Replace("remotes/origin/", "") })
+    $remoteBranchesMergedIntoMaster = @($allBranches | Where-Object {    $_ -like "*remotes/origin/*" } | ForEach-Object { $_.Replace("remotes/origin/", "refs/heads/") })
     if ($localBranchesMergedIntoMaster.Length -gt 0) {
         git branch -d $localBranchesMergedIntoMaster *>&1 | Write-Output
     } else {

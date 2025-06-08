@@ -274,4 +274,29 @@ Describe 'Clear-GitRepo' {
         Remove-Item "test-git-repo-remote" -Recurse -Force
     }
 
+    It 'Removes branch even if there exists a tag with the same name' {
+        mkdir "test-git-repo-remote"
+        Push-Location "test-git-repo-remote"
+        git init
+        git commit --allow-empty -m "dummy commit 1"
+        git tag dummy-name
+        git checkout -b dummy-name *> $null
+        git checkout master *> $null
+        Pop-Location
+
+        git clone "test-git-repo-remote" "test-git-repo" *> $null
+
+        Push-Location "test-git-repo"
+        git fetch --tags
+        $out = Clear-GitRepo
+        $out | Set-Content -Path "out.txt"
+        $branches = git branch --all | ForEach-Object { $_.Trim() }
+
+        $branches | Should -Not -Contain "dummy-name"
+        $out | ForEach-Object { $_ | Should -Not -BeLike "*error*" }
+        Pop-Location
+        Remove-Item "test-git-repo" -Recurse -Force
+        Remove-Item "test-git-repo-remote" -Recurse -Force
+    }
+
 }
