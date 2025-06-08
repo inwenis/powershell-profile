@@ -346,6 +346,7 @@ Set-Alias -name pg     -value playground
 Set-Alias -name rr     -value Update-Profile
 Set-Alias -name ic     -value Import-Conda
 Set-Alias -name l      -value Invoke-Login
+Set-Alias -name touch  -value New-Item
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 oh-my-posh init pwsh | Invoke-Expression
