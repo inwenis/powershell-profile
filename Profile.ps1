@@ -120,6 +120,10 @@ function Clear-GitRepo() {
         | Where-Object { ! ($_ -like "*$headBranch*") }
         | ForEach-Object { $_.Trim() }
     $localBranchesMergedIntoMaster  = @($allBranches | Where-Object { ! ($_ -like "*remotes/origin*") })
+    # A branch is a reference whose full name is refs/heads/branch-name.
+    # Usually, Git can infer that you want to delete (or perform other operations on) a branch from just its short name, e.g., 'branch-name'.
+    # However, if there is another reference with the same name — such as a tag named refs/tags/branch-name — Git cannot determine whether you mean the branch or the tag when you simply specify 'branch-name'.
+    # Therefore, we use the full reference name refs/heads/branch-name to remove any ambiguity and ensure that Git understands we are referring to the branch.
     $remoteBranchesMergedIntoMaster = @($allBranches | Where-Object {    $_ -like "*remotes/origin/*" } | ForEach-Object { $_.Replace("remotes/origin/", "refs/heads/") })
     if ($localBranchesMergedIntoMaster.Length -gt 0) {
         git branch -d $localBranchesMergedIntoMaster *>&1 | Write-Output
