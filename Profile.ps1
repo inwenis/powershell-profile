@@ -308,6 +308,8 @@ function playground() {
     # copy settings so that the playground vs code gets a nice orange color thank to peacock extension
     Copy-Item (Join-Path $HOME "Documents" "PowerShell" ".\resources\settings.json") ".vscode\settings.json"
     # open the directory in vscode with the playground.fsx opened
+    New-GitIgnore Dotnet > .gitignore
+    New-GitIgnore Global/VisualStudioCode >> .gitignore
     code . ./playground.fsx --disable-workspace-trust
 }
 
@@ -333,6 +335,18 @@ function Invoke-Login {
     . "C:\git\snips\ahk\logins.ahk"
 }
 
+function New-GitIgnore {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [string]
+        $Name
+    )
+    # get a template from https://github.com/github/gitignore
+    $resp = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/github/gitignore/refs/heads/main/$Name.gitignore"
+    $resp.Content
+}
+
 Set-Alias -name ..     -value Set-LocationUp
 Set-Alias -name cg     -value Set-LocationGit
 Set-Alias -name ce     -value Set-LocationExe
@@ -351,6 +365,7 @@ Set-Alias -name rr     -value Update-Profile
 Set-Alias -name ic     -value Import-Conda
 Set-Alias -name l      -value Invoke-Login
 Set-Alias -name touch  -value New-Item
+Set-Alias -name gi     -value New-GitIgnore -force
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 oh-my-posh init pwsh | Invoke-Expression
