@@ -307,9 +307,12 @@ function playground() {
     New-Item -ItemType Directory -Name ".vscode" | Out-Null
     # copy settings so that the playground vs code gets a nice orange color thank to peacock extension
     Copy-Item (Join-Path $HOME "Documents" "PowerShell" ".\resources\settings.json") ".vscode\settings.json"
-    # open the directory in vscode with the playground.fsx opened
+    # I often use a git repo to follow changes tools make in the playgound hence the .gitignore
+    # TODO - The templates I use do not currently include entries for paket
+    #     the VisualStudio template does
     New-GitIgnore Dotnet > .gitignore
     New-GitIgnore Global/VisualStudioCode >> .gitignore
+    # open the directory in vscode with the playground.fsx opened
     code . ./playground.fsx --disable-workspace-trust
 }
 
@@ -343,6 +346,10 @@ function New-GitIgnore {
         $Name
     )
     # get a template from https://github.com/github/gitignore
+    # why don't I use the API for it? (https://docs.github.com/en/rest/gitignore/gitignore?apiVersion=2022-11-28)
+    # the API doesn't allow to get templates from the Global folder
+    # templates from the Global fodler are meant to be set once on the machine but I don't like it that way
+    # hence I use a raw web request that allows me to get any file (.gitignore tempalte) from the repo
     $resp = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/github/gitignore/refs/heads/main/$Name.gitignore"
     $resp.Content
 }
