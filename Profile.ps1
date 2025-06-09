@@ -311,7 +311,6 @@ function playground() {
     # TODO - The templates I use do not currently include entries for paket
     #     the VisualStudio template does
     New-GitIgnore Dotnet > .gitignore
-    New-GitIgnore Global/VisualStudioCode >> .gitignore
     # open the directory in vscode with the playground.fsx opened
     code . ./playground.fsx --disable-workspace-trust
 }
@@ -348,8 +347,7 @@ function New-GitIgnore {
     # get a template from https://github.com/github/gitignore
     # why don't I use the API for it? (https://docs.github.com/en/rest/gitignore/gitignore?apiVersion=2022-11-28)
     # the API doesn't allow to get templates from the Global folder
-    # templates from the Global fodler are meant to be set once on the machine but I don't like it that way
-    # hence I use a raw web request that allows me to get any file (.gitignore tempalte) from the repo
+    # I use the Global templates in my pc setup scripts
     $resp = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/github/gitignore/refs/heads/main/$Name.gitignore"
     $resp.Content
 }
