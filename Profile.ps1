@@ -334,7 +334,7 @@ function Import-Conda {
 }
 
 function Invoke-Login {
-    . "C:\git\snips\ahk\logins.ahk"
+    . "C:\git\snippets\ahk\logins.ahk"
 }
 
 function New-GitIgnore {
