@@ -1,3 +1,5 @@
+$ErrorActionPreference = "stop"
+
 function Git-Diff {
     param (
         [string] $fileA,
