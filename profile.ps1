@@ -14,6 +14,11 @@ $PSDefaultParameterValues['Out-Default:OutVariable'] = '__'
 # makes Ctrl+Arrows work in Ubuntu/WSL
 Set-PSReadLineOption -EditMode Windows
 
+# wsl CLI (version 2.4.11.0) outputs UTF-16LE by default
+# this env var makes it output utf-8, thanks to that I can do `wsl --help | select-string distro`
+$env:WSL_UTF8 = "1"
+
+
 $env:Path += ";c:\programki\"
 
 $env:DOTNET_ENVIRONMENT = "Development"
