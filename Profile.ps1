@@ -10,6 +10,10 @@ Set-StrictMode -version latest
 # Store previous command's output in $__
 $PSDefaultParameterValues['Out-Default:OutVariable'] = '__'
 
+# https://github.com/PowerShell/PowerShell/issues/8869#issuecomment-1030155259
+# makes Ctrl+Arrows work in Ubuntu/WSL
+Set-PSReadLineOption -EditMode Windows
+
 $env:Path += ";c:\programki\"
 
 $env:DOTNET_ENVIRONMENT = "Development"
