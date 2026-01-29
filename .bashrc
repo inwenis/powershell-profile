@@ -1,0 +1,7 @@
+# my additions to .bashrc
+
+# makes ESC key remove whole line
+bind '"\e":kill-whole-line'
+
+alias cg="pushd /mnt/c/git"
+alias c="code ."
