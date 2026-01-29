@@ -382,7 +382,12 @@ Set-Alias -name touch  -value New-Item
 Set-Alias -name gi     -value New-GitIgnore -force
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
-oh-my-posh init pwsh | Invoke-Expression
+# use a different theme for Linux so I know which tabs in Windows Terminal are WSL ones
+if ($IsLinux) {
+    oh-my-posh init --config "https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/themes/M365Princess.omp.json" pwsh | Invoke-Expression
+} else {
+    oh-my-posh init pwsh | Invoke-Expression
+}
 
 $promptFunction = (Get-Command Prompt).ScriptBlock
 
