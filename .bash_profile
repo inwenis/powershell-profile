@@ -9,3 +9,6 @@ alias c="code ."
 if [ -f ~/.bashrc ]; then
     source ~/.bashrc
 fi
+
+# makes ESC key remove whole line
+bind '"\e":kill-whole-line'
