@@ -58,8 +58,9 @@ Get-ChildItem -Path "./resources" -File | Deploy-File -DestinationDir $resources
 Write-Host "Reloading profile in current session..."
 # todo - can I use Reload-Profile from Profile.ps1 to reload the profile?
 New-ModuleManifest .\temp.psd1  -NestedModules "./profile.ps1"
-# '*> Out-Null' is used because if reloading of the profile is done more than once in a session we get a strange error
+# '*> $null' is used because if reloading of the profile is done more than once in a session we get a strange error
 # about `Remove-Item Function:Get-PoshStackCount` not being able to be removed but the profile is reloaded correctly
-Import-Module ./temp -Global -Force *> NUL
+# we use $null here as Out-Null can not receive all streams
+Import-Module ./temp -Global -Force *> $null
 Remove-Item .\temp.psd1
 Write-Host "Done"
