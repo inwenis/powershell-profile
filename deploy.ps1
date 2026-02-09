@@ -1,22 +1,33 @@
 $ErrorActionPreference = "stop"
 
 function Git-Diff {
-    param (
-        [string] $fileA,
-        [string] $fileB
+    param(
+        [Parameter(Mandatory)][string]$fileA,
+        [Parameter(Mandatory)][string]$fileB
     )
 
-    # if the file doesn't exist we use NUL which is Window's equivalent of /dev/null
-    # NUL is a special file that discards all data written to it, and returns EOF on read
-    # https://ss64.com/nt/nul.html
-    $fileA = if (Test-Path $fileA) { $fileA } else { "NUL" }
-    $fileB = if (Test-Path $fileB) { $fileB } else { "NUL" }
-    # --no-pager - if the diff is large we don't want pagination
-    # --color - force color output even if the output is not a terminal
-    # --no-index - one of the files is not in a git repository
-    $diff = git --no-pager diff --color --no-index $fileA $fileB
-    return $diff
+    $tempEmpty = $null
+    try {
+        $tempEmpty = New-TemporaryFile
+        Set-Content -Path $tempEmpty -Value '' -NoNewline
+
+        $pathA = if (Test-Path -LiteralPath $fileA) { $fileA } else { $tempEmpty }
+        $pathB = if (Test-Path -LiteralPath $fileB) { $fileB } else { $tempEmpty }
+
+        # --no-pager - if the diff is large we don't want pagination
+        # --color - force color output even if the output is not a terminal
+        # --no-index - one of the files is not in a git repository
+        $diff = git --no-pager diff --color --no-index -- $pathA $pathB
+        return $diff
+    }
+    finally {
+        if ($tempEmpty -and (Test-Path -LiteralPath $tempEmpty)) {
+            Remove-Item -LiteralPath $tempEmpty -Force -ErrorAction SilentlyContinue
+        }
+    }
 }
+
+
 
 function Deploy-File {
     param (
