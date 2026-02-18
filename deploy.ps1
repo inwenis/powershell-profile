@@ -51,20 +51,25 @@ function Deploy-File {
     }
 }
 
-# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.4
-$profileDir   = $PROFILE | Split-Path -Parent
-$resourcesDir = "$profileDir\resources"
+# for a dare machine i use the regular deployment for linux but for windows i keep the profile in the git repo at ~/Development/powershell-profile
+# and windows terminal reads it directly from there
+if ($IsLinux) {
+    # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.4
+    $profileDir   = $PROFILE | Split-Path -Parent
+    $resourcesDir = "$profileDir\resources"
 
-if (-not (Test-Path $profileDir)) {
-    # The "PowerShell" directory might not exist, but it's the only directory in the path that might be missing
-    New-Item -ItemType Directory -Path $profileDir | Out-Null
-}
-if (-not (Test-Path $resourcesDir)) {
-    New-Item -ItemType Directory -Path $resourcesDir | Out-Null
-}
+    if (-not (Test-Path $profileDir)) {
+        # The "PowerShell" directory might not exist, but it's the only directory in the path that might be missing
+        New-Item -ItemType Directory -Path $profileDir | Out-Null
+    }
+    if (-not (Test-Path $resourcesDir)) {
+        New-Item -ItemType Directory -Path $resourcesDir | Out-Null
+    }
 
-Get-Item "./profile.ps1" | Deploy-File -DestinationDir $profileDir
-Get-ChildItem -Path "./resources" -File | Deploy-File -DestinationDir $resourcesDir
+    Get-Item "./profile.ps1" | Deploy-File -DestinationDir $profileDir
+    Get-ChildItem -Path "./resources" -File | Deploy-File -DestinationDir $resourcesDir
+
+}
 
 Write-Host "Reloading profile in current session..."
 # todo - can I use Reload-Profile from Profile.ps1 to reload the profile?
