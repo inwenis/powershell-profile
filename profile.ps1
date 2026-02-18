@@ -31,7 +31,12 @@ if (Test-Path "~/Development/powershell/Secrets.ps1") {
     . "~/Development/powershell/Secrets.ps1"
 }
 
-function Set-LocationGit { Set-Location "~/Development" }
+if ($IsLinux) {
+    function Set-LocationGit { Set-Location "~/git" }
+} else {
+    function Set-LocationGit { Set-Location "~/Development" }
+}
+
 
 function Set-LocationUp { Set-Location ".." }
 
