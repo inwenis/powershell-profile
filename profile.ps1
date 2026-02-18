@@ -24,10 +24,11 @@ $env:Path += ";~\.local\bin"
 
 $env:DOTNET_ENVIRONMENT = "Development"
 
-# you can put a Secrets.ps1 file next to the profile on your machine to keep your secrets there
-if (Test-Path "$PSScriptRoot/Secrets.ps1") {
+# you can put a Secrets.ps1 file in ~/Development/powershell/ and store your secrets there
+# for a dare machine the script must be located under ~/Development because IT doesn't allow script from other locations to be executed
+if (Test-Path "~/Development/powershell/Secrets.ps1") {
     Write-Host "Loading secrets..."
-    . "$PSScriptRoot/Secrets.ps1"
+    . "~/Development/powershell/Secrets.ps1"
 }
 
 function Set-LocationGit { Set-Location "c:\git" }
