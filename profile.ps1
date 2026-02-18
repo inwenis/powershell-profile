@@ -31,7 +31,7 @@ if (Test-Path "~/Development/powershell/Secrets.ps1") {
     . "~/Development/powershell/Secrets.ps1"
 }
 
-function Set-LocationGit { Set-Location "c:\git" }
+function Set-LocationGit { Set-Location "~/Development" }
 
 function Set-LocationUp { Set-Location ".." }
 
