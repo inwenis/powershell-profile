@@ -381,6 +381,8 @@ Set-Alias -name ic     -value Import-Conda
 Set-Alias -name l      -value Invoke-Login
 Set-Alias -name touch  -value New-Item
 Set-Alias -name gi     -value New-GitIgnore -force
+Set-Alias -name which  -value Get-Command
+
 
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 # use a different theme for Linux so I know which tabs in Windows Terminal are WSL ones
