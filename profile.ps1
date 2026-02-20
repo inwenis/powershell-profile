@@ -19,7 +19,7 @@ Set-PSReadLineOption -EditMode Windows
 $env:WSL_UTF8 = "1"
 
 
-$env:Path += ";c:\programki\"
+$env:Path += ";c:\programki"
 $env:Path += ";~\.local\bin"
 
 $env:DOTNET_ENVIRONMENT = "Development"
