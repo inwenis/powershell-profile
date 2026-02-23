@@ -3,3 +3,5 @@ bind '"\e":kill-whole-line'
 
 alias cg="pushd /mnt/c/git"
 alias c="code ."
+
+export PATH=$PATH:/usr/local/go/bin
