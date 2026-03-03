@@ -217,18 +217,6 @@ function Clear-GitBranchesStale($daysThreshold = 100) {
     }
 }
 
-function Set-NodeExtraCaCertsForDCRepos() {
-    $dcRepos = @("c:\git\IT.DataCapture", "c:\git\IT.ContinuousDataCapture")
-    $currentDir = Get-Location
-    $areWeInADcRepo = $dcRepos.Where({ $_ -eq $currentDir }).Count -gt 0
-    if ($areWeInADcRepo) {
-        $env:NODE_EXTRA_CA_CERTS = "./extraCerts.pem"
-    }
-    else {
-        Remove-Item Env:\NODE_EXTRA_CA_CERTS
-    }
-}
-
 function play() {
 
     # list from https://en.wikipedia.org/wiki/Video_file_format
@@ -366,7 +354,6 @@ Set-Alias -name ..     -value Set-LocationUp
 Set-Alias -name cg     -value Set-LocationGit
 Set-Alias -name ce     -value Set-LocationExe
 Set-Alias -name bfg    -value Invoke-Bfg
-Set-Alias -name curvie -value "IT.Curvie.exe"
 Set-Alias -name c      -value Open-VsCodeDot
 Set-Alias -name cn     -value code
 Set-Alias -name total  -value Open-TotalCommander
@@ -383,18 +370,10 @@ Set-Alias -name touch  -value New-Item
 Set-Alias -name gi     -value New-GitIgnore -force
 Set-Alias -name which  -value Get-Command
 
-
 # added at the end as per documentation - https://ohmyposh.dev/docs/installation/prompt
 # use a different theme for Linux so I know which tabs in Windows Terminal are WSL ones
 if ($IsLinux) {
     oh-my-posh init --config "https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/themes/onehalf.minimal.omp.json" pwsh | Invoke-Expression
 } else {
     oh-my-posh init pwsh | Invoke-Expression
-}
-
-$promptFunction = (Get-Command Prompt).ScriptBlock
-
-function Prompt {
-    Set-NodeExtraCaCertsForDCRepos
-    $promptFunction.Invoke()
 }
