@@ -75,3 +75,7 @@ New-ModuleManifest .\temp.psd1  -NestedModules "./profile.ps1"
 Import-Module ./temp -Global -Force *> $null
 Remove-Item .\temp.psd1
 Write-Host "Done"
+
+Write-Host "Configuring git..."
+.\configure_git.ps1
+Write-Host "Done"
