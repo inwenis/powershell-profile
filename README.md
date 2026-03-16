@@ -1,6 +1,6 @@
-This is the public part of my powershell profile.
+This is the public part of my powershell profile and bash addons.
 
-# how to use it?
+# how to deploy it?
 
 ```PowerShell
 deploy.ps1
